@@ -1,0 +1,14 @@
+.input__span {
+}
+
+.input__span_error {
+    border: 2px solid lightcoral;
+}
+
+.input__span:focus {
+    outline: none;
+}
+
+.input__span_error:focus {
+    outline: none;
+}

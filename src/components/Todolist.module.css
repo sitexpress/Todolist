@@ -1,0 +1,17 @@
+.todolist__container {
+    border: 1px dotted lightyellow;
+    border-radius: 20px;
+    margin: 5px;
+    padding: 20px;
+}
+
+.todolist__header {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: lightslategray;
+    font-size: 21px;
+}
+
+.checkbox__task {
+
+}

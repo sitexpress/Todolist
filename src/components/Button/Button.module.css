@@ -1,0 +1,12 @@
+.btn {
+    width: 30px;
+    height: 30px;
+}
+.btn__remove {
+    color: grey;
+}
+.btn__remove_todo {
+    float: right;
+    font-size: 18px;
+    color: grey;
+}
