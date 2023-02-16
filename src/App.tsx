@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useReducer, useState} from 'react';
 import {v1} from "uuid";
 import {Todolist} from "./components/Todolist";
 import {ButtonAppBar} from "./components/AppBar/AppBar";
@@ -9,6 +9,22 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {Mbutton} from "./components/Button/Button";
+import {
+    ActionTodoType,
+    addNewTodolistAC,
+    onEditHeadingAC,
+    onFilterAC,
+    removeTodolistAC,
+    todolistsReducer
+} from "./state/todolists-reducer";
+import {
+    ActionTaskType,
+    addTasksAC,
+    changeTaskStatusAC,
+    onEditTaskAC,
+    removeTasksAC,
+    tasksReducer
+} from "./state/tasks-reducer";
 
 
 export type FilterType = 'all' | 'active' | 'done'
@@ -35,12 +51,36 @@ const todolistId_2 = v1()
 
 function App() {
 
-    const [todolists, setTodolists] = useState<TodolistsType[]>([
-        {id: todolistId_1, title: 'Work', filter:'all'},
+    // const [todolists, setTodolists] = useState<TodolistsType[]>([
+    //     {id: todolistId_1, title: 'Work', filter:'all'},
+    //     {id: todolistId_2, title: 'Hobbies', filter:'all'},
+    // ])
+    //
+    // const [tasks, setTasks] = useState<TasksType>({
+    //     [todolistId_1]: {
+    //         data: [
+    //             {id: v1(), name: 'Eat', isDone: false},
+    //             {id: v1(), name: 'Sleep', isDone: false},
+    //             {id: v1(), name: 'Rave', isDone: true},
+    //         ]
+    //     },
+    //     [todolistId_2]: {
+    //         data: [
+    //             {id: v1(), name: 'Eat', isDone: false},
+    //             {id: v1(), name: 'Sleep', isDone: true},
+    //             {id: v1(), name: 'Rave', isDone: false},
+    //         ]
+    //     }
+    // })
+
+
+    let [todolists, dispatchToTodolists] = useReducer<(state: TodolistsType[], action: ActionTodoType) => TodolistsType[]>(todolistsReducer,[
+        {id: todolistId_1, title: 'Work', filter: 'all'},
         {id: todolistId_2, title: 'Hobbies', filter:'all'},
     ])
 
-    const [tasks, setTasks] = useState<TasksType>({
+
+    const [tasks, dispatchToTasks] = useReducer<(state: TasksType, action: ActionTaskType) => TasksType>(tasksReducer, {
         [todolistId_1]: {
             data: [
                 {id: v1(), name: 'Eat', isDone: false},
@@ -57,15 +97,17 @@ function App() {
         }
     })
 
-    const onCheckboxHandler = (e: ChangeEvent<HTMLInputElement>, todolistId: string, taskId: string) => {
+    const onCheckboxHandler = (todolistId: string, taskId: string, e: ChangeEvent<HTMLInputElement>) => {
         const isDone = e.currentTarget.checked
-        setTasks({
-            ...tasks,
-            [todolistId]: {
-                ...tasks[todolistId],
-                data: tasks[todolistId].data.map(el => el.id === taskId ? {...el, isDone} : el)
-            }
-        })
+        const action = changeTaskStatusAC(todolistId, taskId, isDone)
+        dispatchToTasks(action)
+        // setTasks({
+        //     ...tasks,
+        //     [todolistId]: {
+        //         ...tasks[todolistId],
+        //         data: tasks[todolistId].data.map(el => el.id === taskId ? {...el, isDone} : el)
+        //     }
+        // })
     }
 
     const onInputTextKeyDownHandler = (todolistId: string, name: string) => {
@@ -73,53 +115,67 @@ function App() {
     }
 
     const onRemoveTaskHandler = (todolistId: string, taskId: string) => {
-        setTasks({
-            ...tasks,
-            [todolistId]: {...tasks[todolistId], data: tasks[todolistId].data.filter(t => t.id !== taskId)}
-        })
+        const action = removeTasksAC(todolistId, taskId)
+        dispatchToTasks(action)
+        // setTasks({
+        //     ...tasks,
+        //     [todolistId]: {...tasks[todolistId], data: tasks[todolistId].data.filter(t => t.id !== taskId)}
+        // })
     }
 
     const onAddTaskHandler = (todolistId: string, name: string) => {
-            const task = {id: v1(), name: name.trim(), isDone: false}
-            setTasks({
-                ...tasks,
-                [todolistId]: {
-                    ...tasks[todolistId],
-                    data: [task, ...tasks[todolistId].data]
-                }
-            })
+        const action = addTasksAC(todolistId, name)
+        dispatchToTasks(action)
+            // const task = {id: v1(), name: name.trim(), isDone: false}
+            // setTasks({
+            //     ...tasks,
+            //     [todolistId]: {
+            //         ...tasks[todolistId],
+            //         data: [task, ...tasks[todolistId].data]
+            //     }
+            // })
     }
 
     const onEditTaskSpanKeyPressHandler = (todolistId: string, taskId: string, name: string) => {
-        setTasks({
-            ...tasks,
-            [todolistId]: {
-                ...tasks[todolistId],
-                data: tasks[todolistId].data.map(t => t.id === taskId ? {...t, name} : t)
-            }
-        })
+        const action = onEditTaskAC(todolistId, taskId, name)
+        dispatchToTasks(action)
+        // setTasks({
+        //     ...tasks,
+        //     [todolistId]: {
+        //         ...tasks[todolistId],
+        //         data: tasks[todolistId].data.map(t => t.id === taskId ? {...t, name} : t)
+        //     }
+        // })
     }
 
     const onEditHeadingKeyPressHandler = (title: string, todolistId: string) => {
-        setTodolists(
-            todolists.map(todo => todo.id === todolistId ? {...todo, title} : todo)
-        )
+        const action = onEditHeadingAC(todolistId,title)
+        dispatchToTodolists(action)
+        // setTodolists(
+        //     todolists.map(todo => todo.id === todolistId ? {...todo, title} : todo)
+        // )
     }
 
     const onFilterHandler = (todolistId: string, filter: FilterType) => {
-        setTodolists(todolists.map(todo => todo.id === todolistId ? {...todo, filter}: todo ))
+        const action = onFilterAC(todolistId, filter)
+        dispatchToTodolists(action)
+        // setTodolists(todolists.map(todo => todo.id === todolistId ? {...todo, filter}: todo ))
     }
 
     const onAddTodoHandler = (title:string) => {
-            const newTodolistId = v1()
-            const newTodoList:TodolistsType = {id: newTodolistId, title, filter:"all"}
-            setTodolists([
-                newTodoList, ...todolists
-            ])
-            setTasks({
-                ...tasks,
-                    [newTodoList.id]: {...tasks[newTodoList.id], data:[]}
-            })
+        const todolistId = v1()
+        const action = addNewTodolistAC(todolistId, title)
+        dispatchToTodolists(action)
+        dispatchToTasks(action)
+            // const newTodolistId = v1()
+            // const newTodoList:TodolistsType = {id: newTodolistId, title, filter:"all"}
+            // setTodolists([
+            //     newTodoList, ...todolists
+            // ])
+            // setTasks({
+            //     ...tasks,
+            //         [newTodoList.id]: {...tasks[newTodoList.id], data:[]}
+            // })
     }
 
     const onInputTextKeyDownNewTodo = (newTitle: string) => {
@@ -127,10 +183,12 @@ function App() {
     }
 
     const onRemoveTodolist = (todolistId:string) => {
-        const newTasks = {...tasks}
-        delete newTasks[todolistId]
-        setTasks({...newTasks})
-        setTodolists(todolists.filter(todo => todo.id !== todolistId))
+        const action = removeTodolistAC(todolistId)
+        dispatchToTodolists(action)
+        // const newTasks = {...tasks}
+        // delete newTasks[todolistId]
+        // setTasks({...newTasks})
+        // setTodolists(todolists.filter(todo => todo.id !== todolistId))
     }
 
     return <>
@@ -156,7 +214,7 @@ function App() {
                             if (td.filter === 'done') {
                                 filteredTasks = tasks[td.id].data.filter(t => t.isDone)
                             }
-                            return <>
+                            return <div key={td.id}>
                                 <Paper elevation={2} style={{padding:"5px", margin:"5px"}}>
                                 <Mbutton
                                     callBack={() => onRemoveTodolist(td.id)}
@@ -164,7 +222,6 @@ function App() {
                                     variant={"contained"}
                                 />
                                 <Todolist
-                                    key={td.id}
                                     todolistId={td.id}
                                     title={td.title}
                                     onInputTextKeyDown={(todolistId: string, name: string) => onInputTextKeyDownHandler(todolistId, name)}
@@ -178,7 +235,7 @@ function App() {
                                     onEditHeadingKeyPress={onEditHeadingKeyPressHandler}
                                 />
                                 </Paper>
-                            </>
+                            </div>
                         })}
                     </div>
                 </Grid>

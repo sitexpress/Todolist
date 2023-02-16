@@ -14,7 +14,7 @@ type TodolistType = {
     onInputTextKeyDown: (todolistId: string, name: string) => void
     onAddTask: (todolistId: string, name: string) => void
     filteredTasks: TaskType[]
-    onCheckbox: (e: ChangeEvent<HTMLInputElement>, todolistId: string, taskId: string) => void
+    onCheckbox: (todolistId: string, taskId: string, e: ChangeEvent<HTMLInputElement>) => void
     onRemove: (todolistId: string, taskId: string) => void
     onFilter: (todolistId: string, name: FilterType) => void
     filter: FilterType
@@ -99,11 +99,10 @@ export const Todolist: React.FC<TodolistType> = ({
                         onEditTaskSpanKeyPress(todolistId, taskId, name)
                     }
 
-                    return <span key={t.id}>
-                            <li>
+                    return <li key={t.id}>
                                 <Checkbox
                                     className={s.checkbox__task}
-                                    onChange={(e) => onCheckbox(e, todolistId, t.id)}
+                                    onChange={(e) => onCheckbox(todolistId, t.id, e)}
                                     checked={t.isDone}
                                 />
                                 <EditableSpan
@@ -116,7 +115,6 @@ export const Todolist: React.FC<TodolistType> = ({
                                     variant={"contained"}
                                 />
                             </li>
-                    </span>
                 })}
             </ul>
         </div>
