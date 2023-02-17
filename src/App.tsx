@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useReducer, useState} from 'react';
+import React, {ChangeEvent, useCallback, useReducer, useState} from 'react';
 import {v1} from "uuid";
 import {Todolist} from "./components/Todolist";
 import {ButtonAppBar} from "./components/AppBar/AppBar";
@@ -25,6 +25,8 @@ import {
     removeTasksAC,
     tasksReducer
 } from "./state/tasks-reducer";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./state/state";
 
 
 export type FilterType = 'all' | 'active' | 'done'
@@ -50,7 +52,7 @@ const todolistId_1 = v1()
 const todolistId_2 = v1()
 
 function App() {
-
+    //Пример с useState
     // const [todolists, setTodolists] = useState<TodolistsType[]>([
     //     {id: todolistId_1, title: 'Work', filter:'all'},
     //     {id: todolistId_2, title: 'Hobbies', filter:'all'},
@@ -73,122 +75,84 @@ function App() {
     //     }
     // })
 
+    // Пример с React-овскими редюсерами
+    // let [todolists, dispatchToTodolists] = useReducer<(state: TodolistsType[], action: ActionTodoType) => TodolistsType[]>(todolistsReducer,[
+    //     {id: todolistId_1, title: 'Work', filter: 'all'},
+    //     {id: todolistId_2, title: 'Hobbies', filter:'all'},
+    // ])
+    //
+    //
+    // const [tasks, dispatchToTasks] = useReducer<(state: TasksType, action: ActionTaskType) => TasksType>(tasksReducer, {
+    //     [todolistId_1]: {
+    //         data: [
+    //             {id: v1(), name: 'Eat', isDone: false},
+    //             {id: v1(), name: 'Sleep', isDone: false},
+    //             {id: v1(), name: 'Rave', isDone: true},
+    //         ]
+    //     },
+    //     [todolistId_2]: {
+    //         data: [
+    //             {id: v1(), name: 'Eat', isDone: false},
+    //             {id: v1(), name: 'Sleep', isDone: true},
+    //             {id: v1(), name: 'Rave', isDone: false},
+    //         ]
+    //     }
+    // })
 
-    let [todolists, dispatchToTodolists] = useReducer<(state: TodolistsType[], action: ActionTodoType) => TodolistsType[]>(todolistsReducer,[
-        {id: todolistId_1, title: 'Work', filter: 'all'},
-        {id: todolistId_2, title: 'Hobbies', filter:'all'},
-    ])
+    const todolists = useSelector<AppRootStateType, TodolistsType[]>(state => state.todolists)
 
+    const dispatch = useDispatch()
 
-    const [tasks, dispatchToTasks] = useReducer<(state: TasksType, action: ActionTaskType) => TasksType>(tasksReducer, {
-        [todolistId_1]: {
-            data: [
-                {id: v1(), name: 'Eat', isDone: false},
-                {id: v1(), name: 'Sleep', isDone: false},
-                {id: v1(), name: 'Rave', isDone: true},
-            ]
-        },
-        [todolistId_2]: {
-            data: [
-                {id: v1(), name: 'Eat', isDone: false},
-                {id: v1(), name: 'Sleep', isDone: true},
-                {id: v1(), name: 'Rave', isDone: false},
-            ]
-        }
-    })
+    const onCheckboxHandler = useCallback(
+        (todolistId: string, taskId: string, e: ChangeEvent<HTMLInputElement>) => {
+            const isDone = e.currentTarget.checked
+            const action = changeTaskStatusAC(todolistId, taskId, isDone)
+            dispatch(action)
+        },[])
 
-    const onCheckboxHandler = (todolistId: string, taskId: string, e: ChangeEvent<HTMLInputElement>) => {
-        const isDone = e.currentTarget.checked
-        const action = changeTaskStatusAC(todolistId, taskId, isDone)
-        dispatchToTasks(action)
-        // setTasks({
-        //     ...tasks,
-        //     [todolistId]: {
-        //         ...tasks[todolistId],
-        //         data: tasks[todolistId].data.map(el => el.id === taskId ? {...el, isDone} : el)
-        //     }
-        // })
-    }
+    const onInputTextKeyDownHandler = useCallback((todolistId: string, name: string) => {
+        onAddTaskHandler(todolistId, name)
+    },[])
 
-    const onInputTextKeyDownHandler = (todolistId: string, name: string) => {
-            onAddTaskHandler(todolistId, name)
-    }
-
-    const onRemoveTaskHandler = (todolistId: string, taskId: string) => {
+    const onRemoveTaskHandler = useCallback((todolistId: string, taskId: string) => {
         const action = removeTasksAC(todolistId, taskId)
-        dispatchToTasks(action)
-        // setTasks({
-        //     ...tasks,
-        //     [todolistId]: {...tasks[todolistId], data: tasks[todolistId].data.filter(t => t.id !== taskId)}
-        // })
-    }
+        dispatch(action)
+    },[])
 
-    const onAddTaskHandler = (todolistId: string, name: string) => {
+    const onAddTaskHandler = useCallback((todolistId: string, name: string) => {
         const action = addTasksAC(todolistId, name)
-        dispatchToTasks(action)
-            // const task = {id: v1(), name: name.trim(), isDone: false}
-            // setTasks({
-            //     ...tasks,
-            //     [todolistId]: {
-            //         ...tasks[todolistId],
-            //         data: [task, ...tasks[todolistId].data]
-            //     }
-            // })
-    }
+        dispatch(action)
+    },[])
 
-    const onEditTaskSpanKeyPressHandler = (todolistId: string, taskId: string, name: string) => {
+    const onEditTaskSpanKeyPressHandler = useCallback((todolistId: string, taskId: string, name: string) => {
         const action = onEditTaskAC(todolistId, taskId, name)
-        dispatchToTasks(action)
-        // setTasks({
-        //     ...tasks,
-        //     [todolistId]: {
-        //         ...tasks[todolistId],
-        //         data: tasks[todolistId].data.map(t => t.id === taskId ? {...t, name} : t)
-        //     }
-        // })
-    }
+        dispatch(action)
+    },[])
 
-    const onEditHeadingKeyPressHandler = (title: string, todolistId: string) => {
+    const onEditHeadingKeyPressHandler = useCallback((title: string, todolistId: string) => {
         const action = onEditHeadingAC(todolistId,title)
-        dispatchToTodolists(action)
-        // setTodolists(
-        //     todolists.map(todo => todo.id === todolistId ? {...todo, title} : todo)
-        // )
-    }
+        dispatch(action)
+    },[])
 
-    const onFilterHandler = (todolistId: string, filter: FilterType) => {
+    const onFilterHandler = useCallback((todolistId: string, filter: FilterType) => {
         const action = onFilterAC(todolistId, filter)
-        dispatchToTodolists(action)
-        // setTodolists(todolists.map(todo => todo.id === todolistId ? {...todo, filter}: todo ))
-    }
+        dispatch(action)
+    },[])
 
-    const onAddTodoHandler = (title:string) => {
-        const todolistId = v1()
-        const action = addNewTodolistAC(todolistId, title)
-        dispatchToTodolists(action)
-        dispatchToTasks(action)
-            // const newTodolistId = v1()
-            // const newTodoList:TodolistsType = {id: newTodolistId, title, filter:"all"}
-            // setTodolists([
-            //     newTodoList, ...todolists
-            // ])
-            // setTasks({
-            //     ...tasks,
-            //         [newTodoList.id]: {...tasks[newTodoList.id], data:[]}
-            // })
-    }
+    const onAddTodoHandler = useCallback(
+        (title:string) => {
+            const todolistId = v1()
+            const action = addNewTodolistAC(todolistId, title)
+            dispatch(action)
+        }, [])
 
-    const onInputTextKeyDownNewTodo = (newTitle: string) => {
-            onAddTodoHandler(newTitle)
-    }
+    const onInputTextKeyDownNewTodo = useCallback((newTitle: string) => {
+        onAddTodoHandler(newTitle)
+    }, [])
 
     const onRemoveTodolist = (todolistId:string) => {
         const action = removeTodolistAC(todolistId)
-        dispatchToTodolists(action)
-        // const newTasks = {...tasks}
-        // delete newTasks[todolistId]
-        // setTasks({...newTasks})
-        // setTodolists(todolists.filter(todo => todo.id !== todolistId))
+        dispatch(action)
     }
 
     return <>
@@ -206,14 +170,7 @@ function App() {
 
                         {todolists.map(td => {
 
-                            let filteredTasks = tasks[td.id].data
-                            if (td.filter === 'active') {
-                                filteredTasks = tasks[td.id].data.filter(t => !t.isDone)
-                            }
 
-                            if (td.filter === 'done') {
-                                filteredTasks = tasks[td.id].data.filter(t => t.isDone)
-                            }
                             return <div key={td.id}>
                                 <Paper elevation={2} style={{padding:"5px", margin:"5px"}}>
                                 <Mbutton
@@ -226,7 +183,7 @@ function App() {
                                     title={td.title}
                                     onInputTextKeyDown={(todolistId: string, name: string) => onInputTextKeyDownHandler(todolistId, name)}
                                     onAddTask={(todolistId: string, name: string) => onAddTaskHandler(todolistId, name)}
-                                    filteredTasks={filteredTasks}
+                                  //  tasks={tasks[td.id].data}
                                     onCheckbox={onCheckboxHandler}
                                     onRemove={onRemoveTaskHandler}
                                     onFilter={onFilterHandler}

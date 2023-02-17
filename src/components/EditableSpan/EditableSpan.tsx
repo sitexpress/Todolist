@@ -1,4 +1,4 @@
-import React, {KeyboardEvent,ChangeEvent,FocusEvent, useState} from 'react';
+import React, {KeyboardEvent, ChangeEvent, FocusEvent, useState, memo} from 'react';
 import s from './EditableSpan.module.css'
 
 type EditableSpanType = {
@@ -6,18 +6,19 @@ type EditableSpanType = {
     onEditSpanKeyPress:(name:string) => void
 }
 
-export const EditableSpan: React.FC<EditableSpanType> = ({
-                                                             name,
-                                                             onEditSpanKeyPress
-                                                         }) => {
+export const EditableSpan: React.FC<EditableSpanType> = memo(({
+                                                                  name,
+                                                                  onEditSpanKeyPress
+                                                              }) => {
+    console.log('EditableSpan called')
     const [newSpanName, setNewSpanName] = useState('')
     const [editSpan, setEditSpan] = useState(false)
     const [error, setError] = useState(false)
 
     const onEditSpanHandler = (e:ChangeEvent<HTMLInputElement>) => {
         const newName = e.currentTarget.value
-            setNewSpanName(newName)
-            setError(false)
+        setNewSpanName(newName)
+        setError(false)
     }
 
     const onEditSpanKeyPressHandler = (e:KeyboardEvent<HTMLInputElement>) => {
@@ -42,8 +43,8 @@ export const EditableSpan: React.FC<EditableSpanType> = ({
 
 
     const onDoubleClickEditSpanHandler = () => {
-            setNewSpanName(name)
-            setEditSpan(true)
+        setNewSpanName(name)
+        setEditSpan(true)
     }
 
     const editInputClassName = error ? s.input__span_error : s.input__span
@@ -61,5 +62,5 @@ export const EditableSpan: React.FC<EditableSpanType> = ({
             onBlur={onEditSpanBlurHandler}
             autoFocus
         />
-};
+})
 
