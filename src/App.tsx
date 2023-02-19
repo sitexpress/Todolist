@@ -26,7 +26,7 @@ import {
     tasksReducer
 } from "./state/tasks-reducer";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./state/state";
+import {AppRootStateType} from "./state/store";
 
 
 export type FilterType = 'all' | 'active' | 'done'

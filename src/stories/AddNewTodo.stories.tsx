@@ -4,33 +4,29 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import {AddNewTodo} from "../components/AddNewTodo/AddNewTodo";
 import {action} from "@storybook/addon-actions";
 
+
 export default {
-    title: 'AddNewTodo',
+    title: 'Forms/AddNewTodo',
     component: AddNewTodo,
     argTypes: {
         addNewTodo: {
-            description: 'Todolist has been added on button clicked'
+            description: 'Button clicked'
         },
         onInputTextKeyDown:{
-            description: 'Todolist has been added on enter key down'
+            description: 'On enter key down'
         }
     },
 } as ComponentMeta<typeof AddNewTodo>;
 
-const addNewTodoCallback = action('A new todolist has just been added')
-const onInputTextCallback = action('A new todolist has just been added by Enter keydown event')
 
-const baseArgs = {
-    addNewTodo: addNewTodoCallback,
-    onInputTextKeyDown: onInputTextCallback
-}
+const Template: ComponentStory<typeof AddNewTodo> = (args) => <AddNewTodo {...args} />
 
-const Template: ComponentStory<typeof AddNewTodo> = (args) => <AddNewTodo {...args} />;
-
-export const newTodoWasAdded = Template.bind({});
+// 1. Todolist has been added
+export const newTodoWasAdded = Template.bind({})
 newTodoWasAdded.args = {
-    ...baseArgs,
-
-    addNewTodo:(title:string) => {},
-    onInputTextKeyDown: (newTitle: string) => {}
+    addNewTodo: action('A new todolist has just been added'),
+    onInputTextKeyDown: action('A new todolist has just been added by Enter keydown event')
 };
+
+
+

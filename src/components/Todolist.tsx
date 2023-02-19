@@ -9,7 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 import {v1} from "uuid";
 import {Task} from "./Task/Task";
 import {useSelector} from "react-redux";
-import {AppRootStateType} from "../state/state";
+import {AppRootStateType} from "../state/store";
 
 type TodolistType = {
     todolistId: string

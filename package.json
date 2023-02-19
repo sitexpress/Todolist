@@ -11,10 +11,10 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.12",
+    "@types/jest": "^29.2.0",
+    "@types/node": "^18.11.2",
     "@types/react": "^18.0.27",
-    "@types/react-dom": "^18.0.10",
+    "@types/react-dom": "^18.0.27",
     "@types/uuid": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -32,7 +32,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "jest:integration": "jest -c jest.config.js --verbose",
+    "test:integration": "start-server-and-test storybook http-get://localhost:9009 jest:integration"
   },
   "eslintConfig": {
     "extends": [
@@ -49,9 +51,6 @@
         }
       }
     ]
-  },
-  "resolutions": {
-    "styled-components": "^5"
   },
   "browserslist": {
     "production": [
@@ -78,7 +77,11 @@
     "@storybook/testing-library": "^0.0.13",
     "@types/styled-components": "^5.1.26",
     "babel-plugin-named-exports-order": "^0.0.2",
+    "jest-image-snapshot": "6.1.0",
+    "jest-puppeteer": "6.2.0",
     "prop-types": "^15.8.1",
+    "puppeteer": "19.6.0",
+    "start-server-and-test": "^1.15.4",
     "webpack": "^5.75.0"
   }
 }

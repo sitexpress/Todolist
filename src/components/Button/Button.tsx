@@ -7,7 +7,7 @@ import s from './Button.module.css'
 type ButtonType = {
     callBack: () => void
     name: string
-    variant: "text" | "outlined" | "contained" | undefined
+    variant: "text" | "outlined" | "contained"
 }
 export const Mbutton: React.FC<ButtonType> = ({
                                                   callBack,
