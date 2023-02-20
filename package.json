@@ -33,7 +33,7 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009",
     "build-storybook": "build-storybook -s public",
-    "jest:integration": "jest -c jest.config.js --verbose",
+    "jest:integration": "jest -c integration/jest.config.js --verbose",
     "test:integration": "start-server-and-test storybook http-get://localhost:9009 jest:integration"
   },
   "eslintConfig": {
