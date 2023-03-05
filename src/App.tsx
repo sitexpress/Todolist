@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useReducer, useState} from 'react';
+import React, {ChangeEvent, useCallback, useEffect} from 'react';
 import {v1} from "uuid";
 import {Todolist} from "./components/Todolist";
 import {ButtonAppBar} from "./components/AppBar/AppBar";
@@ -10,46 +10,42 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {Mbutton} from "./components/Button/Button";
 import {
-    ActionTodoType,
     addNewTodolistAC,
-    onEditHeadingAC,
+    changeTodolistTitleTC,
+    ExtendedGetTodolistsType,
+    fetchTodolistsTC,
+    FilterType,
     onFilterAC,
-    removeTodolistAC,
-    todolistsReducer
+    removeTodolistsTC,
 } from "./state/todolists-reducer";
-import {
-    ActionTaskType,
-    addTasksAC,
-    changeTaskStatusAC,
-    onEditTaskAC,
-    removeTasksAC,
-    tasksReducer
-} from "./state/tasks-reducer";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./state/store";
+import {addTasksTC, removeTaskTC, updateTaskTC,} from "./state/tasks-reducer";
+import {useAppDispatch, useAppSelector} from "./state/store";
+import {TaskStatuses} from './api/todolist-api';
 
+// export type TodolistsType = {
+//     id: string
+//     title: string
+//     filter: FilterType
+// }
 
-export type FilterType = 'all' | 'active' | 'done'
-export type TodolistsType = {
-    id: string
-    title: string
-    filter: FilterType
-}
 //---------------------------
-export type TaskType = {
-    id: string
-    name: string
-    isDone: boolean
-}
-type DataType = {
-    data: TaskType[]
-}
-export type TasksType = {
-    [key: string]: DataType
-}
 
-const todolistId_1 = v1()
-const todolistId_2 = v1()
+// export type TaskType = {
+//     id: string
+//     name: string
+//     isDone: boolean
+// }
+
+// type DataType = {
+//     data: TaskType[]
+// }
+
+// export type TasksType = {
+//     [key: string]: DataType
+// }
+
+// const todolistId_1 = v1()
+// const todolistId_2 = v1()
 
 function App() {
     //Пример с useState
@@ -99,39 +95,49 @@ function App() {
     //     }
     // })
 
-    const todolists = useSelector<AppRootStateType, TodolistsType[]>(state => state.todolists)
+    const todolists = useAppSelector<ExtendedGetTodolistsType[]>(state => state.todolists)
+    const dispatch = useAppDispatch()
 
-    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(fetchTodolistsTC())
+    },[])
 
     const onCheckboxHandler = useCallback(
         (todolistId: string, taskId: string, e: ChangeEvent<HTMLInputElement>) => {
             const isDone = e.currentTarget.checked
-            const action = changeTaskStatusAC(todolistId, taskId, isDone)
-            dispatch(action)
-        },[])
+            const status = isDone === true ? TaskStatuses.Completed : TaskStatuses.New
+            // const action = changeTaskStatusAC(todolistId, taskId, status)
+            // dispatch(action)
+            const thunk = updateTaskTC(todolistId, taskId, {status})
+            dispatch(thunk)
+        },[dispatch])
 
     const onInputTextKeyDownHandler = useCallback((todolistId: string, name: string) => {
         onAddTaskHandler(todolistId, name)
     },[])
 
     const onRemoveTaskHandler = useCallback((todolistId: string, taskId: string) => {
-        const action = removeTasksAC(todolistId, taskId)
-        dispatch(action)
+        const thunk = removeTaskTC(todolistId, taskId)
+        dispatch(thunk)
     },[])
 
     const onAddTaskHandler = useCallback((todolistId: string, name: string) => {
-        const action = addTasksAC(todolistId, name)
-        dispatch(action)
+        const thunk = addTasksTC(todolistId, name)
+        dispatch(thunk)
     },[])
 
-    const onEditTaskSpanKeyPressHandler = useCallback((todolistId: string, taskId: string, name: string) => {
-        const action = onEditTaskAC(todolistId, taskId, name)
-        dispatch(action)
+    const onEditTaskSpanKeyPressHandler = useCallback((todolistId: string, taskId: string, title: string) => {
+        // const action = onEditTaskAC(todolistId, taskId, name)
+        // dispatch(action)
+        const thunk = updateTaskTC(todolistId, taskId, {title})
+        dispatch(thunk)
     },[])
 
     const onEditHeadingKeyPressHandler = useCallback((title: string, todolistId: string) => {
-        const action = onEditHeadingAC(todolistId,title)
-        dispatch(action)
+        // const action = onEditHeadingAC(todolistId,title)
+        // dispatch(action)
+        const thunk = changeTodolistTitleTC(todolistId,title)
+        dispatch(thunk)
     },[])
 
     const onFilterHandler = useCallback((todolistId: string, filter: FilterType) => {
@@ -151,8 +157,9 @@ function App() {
     }, [])
 
     const onRemoveTodolist = (todolistId:string) => {
-        const action = removeTodolistAC(todolistId)
-        dispatch(action)
+        dispatch(removeTodolistsTC(todolistId))
+        // const action = removeTodolistAC(todolistId)
+        // dispatch(action)
     }
 
     return <>
@@ -169,8 +176,6 @@ function App() {
                     <div className={s.app__container}>
 
                         {todolists.map(td => {
-
-
                             return <div key={td.id}>
                                 <Paper elevation={2} style={{padding:"5px", margin:"5px"}}>
                                 <Mbutton
@@ -183,7 +188,6 @@ function App() {
                                     title={td.title}
                                     onInputTextKeyDown={(todolistId: string, name: string) => onInputTextKeyDownHandler(todolistId, name)}
                                     onAddTask={(todolistId: string, name: string) => onAddTaskHandler(todolistId, name)}
-                                  //  tasks={tasks[td.id].data}
                                     onCheckbox={onCheckboxHandler}
                                     onRemove={onRemoveTaskHandler}
                                     onFilter={onFilterHandler}
@@ -198,7 +202,6 @@ function App() {
                 </Grid>
             </Container>
         </div>
-
     </>
 }
 

@@ -1,18 +1,38 @@
-import {FilterType, TodolistsType} from "../App";
-import {v1} from "uuid";
+import {GetTodolistsType, todolistAPI} from "../api/todolist-api";
+import {Dispatch} from "redux";
 
-const initialState:TodolistsType[] = []
+export type FilterType = 'all' | 'active' | 'done'
 
-export const todolistsReducer = (state: TodolistsType[] = initialState, action: ActionTodoType):  TodolistsType[] => {
+export type ExtendedGetTodolistsType = GetTodolistsType & {
+    filter: FilterType
+}
+
+const initialState:ExtendedGetTodolistsType[] = []
+
+export const todolistsReducer = (state: ExtendedGetTodolistsType[] = initialState, action: ActionTodoType):  ExtendedGetTodolistsType[] => {
     switch (action.type) {
         case 'REMOVE-TODOLIST':
             return state.filter(todo => todo.id !== action.todolistId)
         case 'ADD-NEW-TODOLIST':
-            return [{id: action.todolistId, title: action.title, filter: "all"}, ...state]
+            return [{
+                id: action.todolistId,
+                title: action.title,
+                filter: "all",
+                addedDate: '',
+                order:0
+            }, ...state]
         case 'CHANGE-TODOLIST-HEADING':
             return state.map(todo => todo.id === action.todolistId ? {...todo, title: action.title} : todo)
         case 'FILTER-TODOLISTS':
             return state.map(todo => todo.id === action.todolistId ? {...todo, filter: action.filter} : todo)
+        case 'SET-TODOLISTS':
+            return action.todolists.map(tl => {
+                    return {
+                        ...tl,
+                        filter:'all'
+                    }
+                })
+
         default:
             return state
     }
@@ -21,6 +41,7 @@ export type ActionTodoType = RemoveTodolistACType
     | AddNewTodolistACType
     | OnEditHeadingACType
     | OnFilterACType
+    | onSetTodolistsACType
 
 export type RemoveTodolistACType = ReturnType<typeof removeTodolistAC>
 export const removeTodolistAC = (todolistId: string) => {
@@ -40,4 +61,33 @@ export const onEditHeadingAC = (todolistId: string, title: string) => {
 type OnFilterACType = ReturnType<typeof onFilterAC>
 export const onFilterAC = (todolistId: string, filter: FilterType) => {
     return {type: 'FILTER-TODOLISTS', todolistId, filter} as const
+}
+
+export type onSetTodolistsACType = ReturnType<typeof onSetTodolistsAC>
+export const onSetTodolistsAC = (todolists: GetTodolistsType[]) => {
+    return {type: 'SET-TODOLISTS', todolists} as const
+}
+
+
+
+//Thunk--------------------------------------------------------------------
+export const fetchTodolistsTC = () => (dispatch:Dispatch) => {
+    todolistAPI.getTodolists()
+        .then((res) => {
+            dispatch(onSetTodolistsAC(res.data))
+        })
+}
+
+export const removeTodolistsTC = (todolistId:string) => (dispatch:Dispatch) => {
+    todolistAPI.deleteTodolist(todolistId)
+        .then((res) => {
+            dispatch(removeTodolistAC(todolistId))
+        })
+}
+
+export const changeTodolistTitleTC = (todolistId:string, title:string) => (dispatch:Dispatch) => {
+    todolistAPI.updateTodolist(todolistId,title)
+        .then((res) => {
+            dispatch(onEditHeadingAC(todolistId,title))
+        })
 }

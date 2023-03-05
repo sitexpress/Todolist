@@ -18,17 +18,8 @@ export default {
 }
 
 
-const Template1:ComponentStory<typeof EditableSpan> = (args) => <EditableSpan {...args}/>
-
-// 1.Editable span without state changing just showing how it looks like:
-export const EditSpanWithoutChanging = Template1.bind({})
-EditSpanWithoutChanging.args = {
-        name: "Work",
-        onEditSpanKeyPress: action("task name has been changed by on enter key down or onBlur event")
-}
-
 // 1.Editable span with state changing:
-const Template2:ComponentStory<typeof EditableSpan> = (args) => {
+const Template:ComponentStory<typeof EditableSpan> = (args) => {
     const [newSpanName, setNewSpanName] = useState(args.name)
     const [editSpan, setEditSpan] = useState(false)
     const [error, setError] = useState(false)
@@ -83,7 +74,7 @@ const Template2:ComponentStory<typeof EditableSpan> = (args) => {
 
 }
 
-export const EditableSpanWithStateChanging = Template2.bind({})
+export const EditableSpanWithStateChanging = Template.bind({})
 EditableSpanWithStateChanging.args = {
     name: "Work",
     onEditSpanKeyPress: action("task name has been changed by on enter key down or onBlur event")

@@ -1,75 +1,187 @@
-import {removeTodolistAC, todolistsReducer} from './todolists-reducer'
+import {ExtendedGetTodolistsType, removeTodolistAC} from './todolists-reducer'
 import {v1} from 'uuid'
-import {TasksType, TodolistsType} from '../App'
-import {addTasksAC, changeTaskStatusAC, removeTasksAC, tasksReducer} from "./tasks-reducer";
+import {addTasksAC, updateTaskAC, onSetTaskAC, removeTasksAC, tasksReducer} from "./tasks-reducer";
+import {ItemsType, TaskPriorities, TaskStatuses, TaskType} from "../api/todolist-api";
 
 let todolistId1:string
 let todolistId2:string
-let startState:TasksType
+let taskId1:string
+let state:ItemsType
+let emptyState:ItemsType
+let todolists:ExtendedGetTodolistsType[]
+
 
 beforeEach(() => {
     todolistId1 = v1()
     todolistId2 = v1()
+    taskId1 = v1()
 
-    startState = {
-        [todolistId1]: {
-            data: [
-                {id: v1(), name: 'Eat', isDone: false},
-                {id: v1(), name: 'Sleep', isDone: false},
-                {id: v1(), name: 'Rave', isDone: true},
+    state =  {
+            [todolistId1]: [
+                {
+                    description: '',
+                    title: 'Eat',
+                    completed: false,
+                    status: TaskStatuses.New,
+                    priority: TaskPriorities.Low,
+                    startDate: '',
+                    deadline: '',
+                    id: '',
+                    todoListId: '',
+                    order: 0,
+                    addedDate: ''
+                },
+                {
+                    description: '',
+                    title: 'Sleep',
+                    completed: false,
+                    status: TaskStatuses.New,
+                    priority: TaskPriorities.Low,
+                    startDate: '',
+                    deadline: '',
+                    id: '',
+                    todoListId: '',
+                    order: 0,
+                    addedDate: ''
+                },
+                {
+                    description: '',
+                    title: 'Rave',
+                    completed: false,
+                    status: TaskStatuses.New,
+                    priority: TaskPriorities.Low,
+                    startDate: '',
+                    deadline: '',
+                    id: '',
+                    todoListId: '',
+                    order: 0,
+                    addedDate: ''
+                }
+            ],
+            [todolistId2]: [
+                {
+                    description: '',
+                    title: 'Eat',
+                    completed: false,
+                    status: TaskStatuses.New,
+                    priority: TaskPriorities.Low,
+                    startDate: '',
+                    deadline: '',
+                    id: '',
+                    todoListId: '',
+                    order: 0,
+                    addedDate: ''
+                },
+                {
+                    description: '',
+                    title: 'Sleep',
+                    completed: false,
+                    status: TaskStatuses.New,
+                    priority: TaskPriorities.Low,
+                    startDate: '',
+                    deadline: '',
+                    id: '',
+                    todoListId: '',
+                    order: 0,
+                    addedDate: ''
+                },
+                {
+                    description: '',
+                    title: 'Rave',
+                    completed: false,
+                    status: TaskStatuses.New,
+                    priority: TaskPriorities.Low,
+                    startDate: '',
+                    deadline: '',
+                    id: '',
+                    todoListId: '',
+                    order: 0,
+                    addedDate: ''
+                }
             ]
-        },
-        [todolistId2]: {
-            data: [
-                {id: v1(), name: 'Eat', isDone: false},
-                {id: v1(), name: 'Sleep', isDone: true},
-                {id: v1(), name: 'Rave', isDone: false},
-            ]
-        }
     }
+    emptyState =  {}
+    todolists = [
+        {
+            id: todolistId1,
+            title: 'What',
+            filter: 'all',
+            addedDate: "2019-07-30T12:24:15.063",
+            order: 0
+        },
+        {
+            id: todolistId2,
+            title: 'What',
+            filter: 'all',
+            addedDate: "2019-07-30T12:24:15.063",
+            order: 0
+        }
+    ]
+
 })
 
 test('correct task should be removed', () => {
-    const taskId = startState[todolistId1].data[0].id
+    const taskId = state[todolistId1][0].id
 
     const action = removeTasksAC(todolistId1, taskId)
-    const result = tasksReducer(startState, action)
+    const result = tasksReducer(state, action)
 
-    expect(result[todolistId1].data.length).toBe(2)
-    expect(result[todolistId1].data[0].name).toBe('Sleep')
+    expect(result[todolistId1].length).toBe(2)
+    expect(result[todolistId1][0].title).toBe('Sleep')
 })
 
-test('task should be added correctly', () => {
+test('correct task should be added correctly', () => {
     const name = 'Drive'
 
-    const action = addTasksAC(todolistId1, name)
-    const result = tasksReducer(startState, action)
+    const action = addTasksAC(state[todolistId1][0])
+    const result = tasksReducer(state, action)
 
-    expect(result[todolistId1].data[0].name).toBe('Drive')
-    expect(result[todolistId1].data.length).toBe(4)
+    expect(result[todolistId1][0].title).toBe('Drive')
+    expect(result[todolistId1].length).toBe(4)
 })
 
 
 test('certain task status should be changed correctly', () => {
     const todolistId = todolistId1
-    const taskId = startState[todolistId1].data[0].id
-    const isDone = true
+    const taskId = state[todolistId1][0].id
+    const status = TaskStatuses.Completed
 
-    const action = changeTaskStatusAC(todolistId, taskId, isDone)
-    const result = tasksReducer(startState, action)
+    const action = updateTaskAC(todolistId, taskId, {status})
+    const result = tasksReducer(state, action)
 
-    expect(result[todolistId].data[0].isDone).toBe(true)
+    expect(result[todolistId][0].status).toBe(2)
 })
 
 test('remove tasks in removed todolist', () => {
     const todolistId = todolistId1
     // delete startState[todolistId]
-    expect(startState[todolistId].data[0].name).toBe('Eat')
+    expect(state[todolistId][0].title).toBe('Eat')
 
     const action = removeTodolistAC(todolistId)
-    const result = tasksReducer(startState, action)
+    const result = tasksReducer(state, action)
 
     expect(result[todolistId]).toBe(undefined)
+})
 
+test('empty arrays should be added when we set todolists', () => {
+        const size = Object.keys(emptyState).length
 
+        expect(size).toEqual(0)
+        const result = tasksReducer(emptyState, {type: 'SET-TODOLISTS', todolists:todolists})
+
+        const resultSize = Object.keys(result).length
+        expect(resultSize).toEqual(2)
+
+})
+test('should add task correctly', () => {
+
+        const size = Object.keys(emptyState).length
+        expect(size).toEqual(0)
+
+        const action = onSetTaskAC(todolistId1, state[todolistId1])
+        const result = tasksReducer(emptyState,action)
+
+        const resultSize = Object.keys(result).length
+        expect(resultSize).toEqual(3)
+        expect(result[todolistId1][0].title).toBe("Eat")
 })

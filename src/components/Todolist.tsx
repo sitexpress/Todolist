@@ -1,22 +1,21 @@
-import React, {ChangeEvent, FocusEvent, KeyboardEvent, memo, useCallback, useState} from 'react';
-import {FilterType, TasksType, TaskType} from "../App";
+import React, {ChangeEvent, FocusEvent, KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
 import {Mbutton} from "./Button/Button";
 import {Input} from "./Input/Input";
 import {EditableSpan} from "./EditableSpan/EditableSpan";
 
 import s from './Todolist.module.css'
-import Checkbox from '@mui/material/Checkbox';
-import {v1} from "uuid";
 import {Task} from "./Task/Task";
 import {useSelector} from "react-redux";
-import {AppRootStateType} from "../state/store";
+import {AppRootStateType, useAppDispatch} from "../state/store";
+import {ItemsType, TaskStatuses, TaskType} from "../api/todolist-api";
+import {fetchTasksTC} from "../state/tasks-reducer";
+import {fetchTodolistsTC, FilterType} from "../state/todolists-reducer";
 
 type TodolistType = {
     todolistId: string
     title: string
     onInputTextKeyDown: (todolistId: string, name: string) => void
     onAddTask: (todolistId: string, name: string) => void
-    //tasks: TaskType[]
     onCheckbox: (todolistId: string, taskId: string, e: ChangeEvent<HTMLInputElement>) => void
     onRemove: (todolistId: string, taskId: string) => void
     onFilter: (todolistId: string, name: FilterType) => void
@@ -31,7 +30,6 @@ export const Todolist: React.FC<TodolistType> = memo(({
                                                           title,
                                                           onInputTextKeyDown,
                                                           onAddTask,
-
                                                           onCheckbox,
                                                           onRemove,
                                                           onFilter,
@@ -40,10 +38,15 @@ export const Todolist: React.FC<TodolistType> = memo(({
                                                           onEditHeadingKeyPress,
                                                       }) => {
 
-    console.log("Todolist called" + todolistId)
-    const tasks = useSelector<AppRootStateType, TasksType>(state => state.tasks)
     const [inputTaskValue, setInputTaskValue] = useState('')
     const [error, setError] = useState(false)
+
+    const tasks = useSelector<AppRootStateType, ItemsType>(state => state.tasks)
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(fetchTasksTC(todolistId))
+    },[todolistId])
 
     const onKeyDownCallBackHandler = (todolistId: string, inputTaskValue: string, e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && inputTaskValue !== '') {
@@ -76,13 +79,13 @@ export const Todolist: React.FC<TodolistType> = memo(({
         }
     }
 
-    let filteredTasks = tasks[todolistId].data
+    let filteredTasks = tasks[todolistId]
     if (filter === 'active') {
-        filteredTasks = tasks[todolistId].data.filter(t => !t.isDone)
+        filteredTasks = tasks[todolistId].filter(t => t.status === TaskStatuses.New)
     }
 
     if (filter === 'done') {
-        filteredTasks = tasks[todolistId].data.filter(t => t.isDone)
+        filteredTasks = tasks[todolistId].filter(t => t.status === TaskStatuses.Completed)
     }
 
 
@@ -116,26 +119,12 @@ export const Todolist: React.FC<TodolistType> = memo(({
                         <Task
                             todolistId={todolistId}
                             taskId={t.id}
-                            taskName={t.name}
+                            taskName={t.title}
                             onCheckbox={onCheckbox}
-                            checked={t.isDone}
+                            checked={t.status === TaskStatuses.New ? false : true}
                             onEditTaskSpanKeyPress={onEditTaskSpanKeyPress}
                             onRemove={onRemove}
                         />
-                        {/*<Checkbox*/}
-                        {/*    className={s.checkbox__task}*/}
-                        {/*    onChange={(e) => onCheckbox(todolistId, t.id, e)}*/}
-                        {/*    checked={t.isDone}*/}
-                        {/*/>*/}
-                        {/*<EditableSpan*/}
-                        {/*    onEditSpanKeyPress={(name) => onEditSpanKeyPressHandler(todolistId, t.id, name)}*/}
-                        {/*    name={t.name}*/}
-                        {/*/>*/}
-                        {/*<Mbutton*/}
-                        {/*    callBack={() => onRemove(todolistId, t.id)}*/}
-                        {/*    name={'x'}*/}
-                        {/*    variant={"contained"}*/}
-                        {/*/>*/}
                     </li>
                 })}
             </ul>
