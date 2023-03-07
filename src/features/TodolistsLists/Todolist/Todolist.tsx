@@ -1,15 +1,15 @@
 import React, {ChangeEvent, FocusEvent, KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
-import {Mbutton} from "./Button/Button";
-import {Input} from "./Input/Input";
-import {EditableSpan} from "./EditableSpan/EditableSpan";
+import {Mbutton} from "../../../components/Button/Button";
+import {Input} from "../../../components/Input/Input";
+import {EditableSpan} from "../../../components/EditableSpan/EditableSpan";
 
 import s from './Todolist.module.css'
-import {Task} from "./Task/Task";
+import {Task} from "../../../components/Task/Task";
 import {useSelector} from "react-redux";
-import {AppRootStateType, useAppDispatch} from "../state/store";
-import {ItemsType, TaskStatuses, TaskType} from "../api/todolist-api";
-import {fetchTasksTC} from "../state/tasks-reducer";
-import {fetchTodolistsTC, FilterType} from "../state/todolists-reducer";
+import {AppRootStateType, useAppDispatch} from "../../../app/store";
+import {ItemsType, TaskStatuses, TaskType} from "../../../api/todolist-api";
+import {fetchTasksTC} from "../tasks-reducer";
+import {fetchTodolistsTC, FilterType} from "../todolists-reducer";
 
 type TodolistType = {
     todolistId: string

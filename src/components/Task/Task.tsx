@@ -1,6 +1,6 @@
 import React, {ChangeEvent, memo} from 'react';
 import Checkbox from "@mui/material/Checkbox";
-import s from "../Todolist.module.css";
+import s from "../../features/TodolistsLists/Todolist/Todolist.module.css";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
 import {Mbutton} from "../Button/Button";
 

@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-import {ExtendedGetTodolistsType} from "../state/todolists-reducer";
+import {ExtendedGetTodolistsType} from "../features/TodolistsLists/todolists-reducer";
 
 // Instance
 const instance = axios.create({

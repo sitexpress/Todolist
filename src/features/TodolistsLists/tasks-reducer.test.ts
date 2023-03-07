@@ -1,7 +1,7 @@
 import {ExtendedGetTodolistsType, removeTodolistAC} from './todolists-reducer'
 import {v1} from 'uuid'
 import {addTasksAC, updateTaskAC, onSetTaskAC, removeTasksAC, tasksReducer} from "./tasks-reducer";
-import {ItemsType, TaskPriorities, TaskStatuses, TaskType} from "../api/todolist-api";
+import {ItemsType, TaskPriorities, TaskStatuses, TaskType} from "../../api/todolist-api";
 
 let todolistId1:string
 let todolistId2:string

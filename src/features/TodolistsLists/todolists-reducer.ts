@@ -1,4 +1,4 @@
-import {GetTodolistsType, todolistAPI} from "../api/todolist-api";
+import {GetTodolistsType, todolistAPI} from "../../api/todolist-api";
 import {Dispatch} from "redux";
 
 export type FilterType = 'all' | 'active' | 'done'

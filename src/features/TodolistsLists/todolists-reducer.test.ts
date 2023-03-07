@@ -93,7 +93,7 @@ test('correct todolist should be filtered', () => {
     expect(result[0].filter).toBe('active')
 })
 
-test('Todolists should be set to the state', () => {
+test('TodolistsLists should be set to the state', () => {
 
     expect(items[0].title).toBe('What to learn')
     expect(items.length).toBe(2)
