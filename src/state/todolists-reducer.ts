@@ -2,11 +2,9 @@ import {GetTodolistsType, todolistAPI} from "../api/todolist-api";
 import {Dispatch} from "redux";
 
 export type FilterType = 'all' | 'active' | 'done'
-
 export type ExtendedGetTodolistsType = GetTodolistsType & {
     filter: FilterType
 }
-
 const initialState:ExtendedGetTodolistsType[] = []
 
 export const todolistsReducer = (state: ExtendedGetTodolistsType[] = initialState, action: ActionTodoType):  ExtendedGetTodolistsType[] => {
@@ -37,12 +35,8 @@ export const todolistsReducer = (state: ExtendedGetTodolistsType[] = initialStat
             return state
     }
 }
-export type ActionTodoType = RemoveTodolistACType
-    | AddNewTodolistACType
-    | OnEditHeadingACType
-    | OnFilterACType
-    | onSetTodolistsACType
 
+// actions
 export type RemoveTodolistACType = ReturnType<typeof removeTodolistAC>
 export const removeTodolistAC = (todolistId: string) => {
     return {type: 'REMOVE-TODOLIST', todolistId} as const
@@ -68,26 +62,31 @@ export const onSetTodolistsAC = (todolists: GetTodolistsType[]) => {
     return {type: 'SET-TODOLISTS', todolists} as const
 }
 
-
-
-//Thunk--------------------------------------------------------------------
-export const fetchTodolistsTC = () => (dispatch:Dispatch) => {
+// thunks
+export const fetchTodolistsTC = () => (dispatch:Dispatch<ActionTodoType>) => {
     todolistAPI.getTodolists()
         .then((res) => {
             dispatch(onSetTodolistsAC(res.data))
         })
 }
 
-export const removeTodolistsTC = (todolistId:string) => (dispatch:Dispatch) => {
+export const removeTodolistsTC = (todolistId:string) => (dispatch:Dispatch<ActionTodoType>) => {
     todolistAPI.deleteTodolist(todolistId)
         .then((res) => {
             dispatch(removeTodolistAC(todolistId))
         })
 }
 
-export const changeTodolistTitleTC = (todolistId:string, title:string) => (dispatch:Dispatch) => {
+export const changeTodolistTitleTC = (todolistId:string, title:string) => (dispatch:Dispatch<ActionTodoType>) => {
     todolistAPI.updateTodolist(todolistId,title)
         .then((res) => {
             dispatch(onEditHeadingAC(todolistId,title))
         })
 }
+
+// types
+export type ActionTodoType = RemoveTodolistACType
+    | AddNewTodolistACType
+    | OnEditHeadingACType
+    | OnFilterACType
+    | onSetTodolistsACType
