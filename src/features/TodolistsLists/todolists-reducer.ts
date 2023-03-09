@@ -1,9 +1,12 @@
 import {GetTodolistsType, todolistAPI} from "../../api/todolist-api";
 import {Dispatch} from "redux";
+import {RequestStatusType, setStatusAC, SetStatusACType} from "../../app/app-reducer";
+import {v1} from "uuid";
 
 export type FilterType = 'all' | 'active' | 'done'
 export type ExtendedGetTodolistsType = GetTodolistsType & {
     filter: FilterType
+    entityStatus:RequestStatusType
 }
 const initialState:ExtendedGetTodolistsType[] = []
 
@@ -16,6 +19,7 @@ export const todolistsReducer = (state: ExtendedGetTodolistsType[] = initialStat
                 id: action.todolistId,
                 title: action.title,
                 filter: "all",
+                entityStatus: 'idle',
                 addedDate: '',
                 order:0
             }, ...state]
@@ -27,7 +31,8 @@ export const todolistsReducer = (state: ExtendedGetTodolistsType[] = initialStat
             return action.todolists.map(tl => {
                     return {
                         ...tl,
-                        filter:'all'
+                        filter:'all',
+                        entityStatus:'idle'
                     }
                 })
 
@@ -63,17 +68,30 @@ export const onSetTodolistsAC = (todolists: GetTodolistsType[]) => {
 }
 
 // thunks
-export const fetchTodolistsTC = () => (dispatch:Dispatch<ActionTodoType>) => {
+export const fetchTodolistsTC = () => (dispatch:Dispatch<ActionTodoType | SetStatusACType>) => {
+    dispatch(setStatusAC('loading'))
     todolistAPI.getTodolists()
         .then((res) => {
             dispatch(onSetTodolistsAC(res.data))
+            dispatch(setStatusAC('succeeded'))
         })
 }
 
-export const removeTodolistsTC = (todolistId:string) => (dispatch:Dispatch<ActionTodoType>) => {
+export const removeTodolistsTC = (todolistId:string) => (dispatch:Dispatch<ActionTodoType | SetStatusACType>) => {
+    dispatch(setStatusAC('loading'))
     todolistAPI.deleteTodolist(todolistId)
         .then((res) => {
             dispatch(removeTodolistAC(todolistId))
+            dispatch(setStatusAC('succeeded'))
+        })
+}
+
+export const addNewTodolistTC = (title:string) => (dispatch:Dispatch<ActionTodoType | SetStatusACType>) => {
+    dispatch(setStatusAC('loading'))
+    todolistAPI.createTodolist(title)
+        .then((res) => {
+            dispatch(addNewTodolistAC( v1(), title))
+            dispatch(setStatusAC('succeeded'))
         })
 }
 

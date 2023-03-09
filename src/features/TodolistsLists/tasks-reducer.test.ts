@@ -7,6 +7,7 @@ let todolistId1:string
 let todolistId2:string
 let taskId1:string
 let state:ItemsType
+let state2:ItemsType
 let emptyState:ItemsType
 let todolists:ExtendedGetTodolistsType[]
 
@@ -26,8 +27,8 @@ beforeEach(() => {
                     priority: TaskPriorities.Low,
                     startDate: '',
                     deadline: '',
-                    id: '',
-                    todoListId: '',
+                    id: '123',
+                    todoListId: todolistId1,
                     order: 0,
                     addedDate: ''
                 },
@@ -100,12 +101,43 @@ beforeEach(() => {
                 }
             ]
     }
+    state2 =  {
+            [todolistId1]: [
+                {
+                    description: '',
+                    title: 'Sleep',
+                    completed: false,
+                    status: TaskStatuses.New,
+                    priority: TaskPriorities.Low,
+                    startDate: '',
+                    deadline: '',
+                    id: '123',
+                    todoListId: todolistId1,
+                    order: 0,
+                    addedDate: ''
+                },
+                {
+                    description: '',
+                    title: 'Rave',
+                    completed: false,
+                    status: TaskStatuses.New,
+                    priority: TaskPriorities.Low,
+                    startDate: '',
+                    deadline: '',
+                    id: '',
+                    todoListId: '',
+                    order: 0,
+                    addedDate: ''
+                }
+            ]
+    }
     emptyState =  {}
     todolists = [
         {
             id: todolistId1,
             title: 'What',
             filter: 'all',
+            entityStatus:'idle',
             addedDate: "2019-07-30T12:24:15.063",
             order: 0
         },
@@ -113,6 +145,7 @@ beforeEach(() => {
             id: todolistId2,
             title: 'What',
             filter: 'all',
+            entityStatus:'idle',
             addedDate: "2019-07-30T12:24:15.063",
             order: 0
         }
@@ -131,13 +164,15 @@ test('correct task should be removed', () => {
 })
 
 test('correct task should be added correctly', () => {
-    const name = 'Drive'
+
+    expect(state2[todolistId1][0].title).toBe('Sleep')
+    expect(state2[todolistId1].length).toBe(2)
 
     const action = addTasksAC(state[todolistId1][0])
-    const result = tasksReducer(state, action)
+    const result = tasksReducer(state2, action)
 
-    expect(result[todolistId1][0].title).toBe('Drive')
-    expect(result[todolistId1].length).toBe(4)
+    expect(result[todolistId1][0].title).toBe('Eat')
+    expect(result[todolistId1].length).toBe(3)
 })
 
 
@@ -173,15 +208,15 @@ test('empty arrays should be added when we set todolists', () => {
         expect(resultSize).toEqual(2)
 
 })
-test('should add task correctly', () => {
+test('should set task correctly', () => {
 
         const size = Object.keys(emptyState).length
         expect(size).toEqual(0)
 
         const action = onSetTaskAC(todolistId1, state[todolistId1])
-        const result = tasksReducer(emptyState,action)
+        const result = tasksReducer(emptyState, action)
 
         const resultSize = Object.keys(result).length
-        expect(resultSize).toEqual(3)
+        expect(resultSize).toEqual(1)
         expect(result[todolistId1][0].title).toBe("Eat")
 })

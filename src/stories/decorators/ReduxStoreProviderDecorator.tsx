@@ -1,10 +1,11 @@
 import {Provider} from "react-redux"
 import {AppRootStateType, store} from "../../app/store"
-import {combineReducers} from "redux";
+import {applyMiddleware, combineReducers} from "redux";
 import {tasksReducer} from "../../features/TodolistsLists/tasks-reducer";
 import {todolistsReducer} from "../../features/TodolistsLists/todolists-reducer";
 import { legacy_createStore as createStore} from 'redux'
 import {v1} from "uuid";
+import thunk from "redux-thunk";
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
@@ -29,7 +30,7 @@ const initialGlobalState = {
 }
 
 
-export const storyBookStore = createStore(rootReducer, initialGlobalState as unknown as AppRootStateType)
+export const storyBookStore = createStore(rootReducer, initialGlobalState as unknown as AppRootStateType, applyMiddleware(thunk))
 
 export const ReduxStoreProviderDecorator = (storyFn:any) => {
     return <Provider store={store}>{storyFn()}</Provider>

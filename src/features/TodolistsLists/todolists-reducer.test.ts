@@ -18,6 +18,7 @@ beforeEach(() => {
                         id: todolistId1, 
                         title: 'What to learn', 
                         filter: 'all',
+                        entityStatus:'idle',
                         addedDate: "2019-07-30T12:24:15.063",
                         order: 0
                     },
@@ -25,6 +26,7 @@ beforeEach(() => {
                         id: todolistId2, 
                         title: 'What to buy', 
                         filter: 'all',
+                        entityStatus:'idle',
                         addedDate: "2019-07-30T12:24:15.063",
                         order: 0
                     }
@@ -35,6 +37,7 @@ beforeEach(() => {
             id: todolistId1,
             title: 'What',
             filter: 'all',
+            entityStatus:'idle',
             addedDate: "2019-07-30T12:24:15.063",
             order: 0
         },
@@ -42,6 +45,7 @@ beforeEach(() => {
             id: todolistId2,
             title: 'What',
             filter: 'all',
+            entityStatus:'idle',
             addedDate: "2019-07-30T12:24:15.063",
             order: 0
         },
@@ -49,6 +53,7 @@ beforeEach(() => {
             id: todolistId2,
             title: 'What',
             filter: 'all',
+            entityStatus:'idle',
             addedDate: "2019-07-30T12:24:15.063",
             order: 0
         }

@@ -15,7 +15,8 @@ import Paper from "@mui/material/Paper";
 import {Mbutton} from "../../components/Button/Button";
 import {Todolist} from "./Todolist/Todolist";
 
-export const TodolistsLists:React.FC = () => {
+
+export const TodolistsLists = () => {
     const todolists = useAppSelector<ExtendedGetTodolistsType[]>(state => state.todolists)
     const dispatch = useAppDispatch()
 
@@ -86,14 +87,12 @@ export const TodolistsLists:React.FC = () => {
                                 variant={"contained"}
                             />
                             <Todolist
-                                todolistId={td.id}
-                                title={td.title}
+                                todolists={td}
                                 onInputTextKeyDown={(todolistId: string, name: string) => onInputTextKeyDownHandler(todolistId, name)}
                                 onAddTask={(todolistId: string, name: string) => onAddTaskHandler(todolistId, name)}
                                 onCheckbox={onCheckboxHandler}
                                 onRemove={onRemoveTaskHandler}
                                 onFilter={onFilterHandler}
-                                filter={td.filter}
                                 onEditTaskSpanKeyPress={onEditTaskSpanKeyPressHandler}
                                 onEditHeadingKeyPress={onEditHeadingKeyPressHandler}
                             />

@@ -9,31 +9,26 @@ import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch} from "../../../app/store";
 import {ItemsType, TaskStatuses, TaskType} from "../../../api/todolist-api";
 import {fetchTasksTC} from "../tasks-reducer";
-import {fetchTodolistsTC, FilterType} from "../todolists-reducer";
+import {ExtendedGetTodolistsType, fetchTodolistsTC, FilterType} from "../todolists-reducer";
 
 type TodolistType = {
-    todolistId: string
-    title: string
+    todolists:ExtendedGetTodolistsType
     onInputTextKeyDown: (todolistId: string, name: string) => void
     onAddTask: (todolistId: string, name: string) => void
     onCheckbox: (todolistId: string, taskId: string, e: ChangeEvent<HTMLInputElement>) => void
     onRemove: (todolistId: string, taskId: string) => void
     onFilter: (todolistId: string, name: FilterType) => void
-    filter: FilterType
     onEditTaskSpanKeyPress: (todolistId: string, taskId: string, name: string) => void
     onEditHeadingKeyPress: (title: string, todolistId: string) => void
-
 }
 
 export const Todolist: React.FC<TodolistType> = memo(({
-                                                          todolistId,
-                                                          title,
+                                                          todolists,
                                                           onInputTextKeyDown,
                                                           onAddTask,
                                                           onCheckbox,
                                                           onRemove,
                                                           onFilter,
-                                                          filter,
                                                           onEditTaskSpanKeyPress,
                                                           onEditHeadingKeyPress,
                                                       }) => {
@@ -45,8 +40,8 @@ export const Todolist: React.FC<TodolistType> = memo(({
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(fetchTasksTC(todolistId))
-    },[todolistId])
+        dispatch(fetchTasksTC(todolists.id))
+    }, [todolists.id])
 
     const onKeyDownCallBackHandler = (todolistId: string, inputTaskValue: string, e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && inputTaskValue !== '') {
@@ -66,42 +61,42 @@ export const Todolist: React.FC<TodolistType> = memo(({
 
     const addTaskHandler = useCallback(() => {
         if (inputTaskValue.trim() !== '') {
-            onAddTask(todolistId, inputTaskValue)
+            onAddTask(todolists.id, inputTaskValue)
             setInputTaskValue('')
         } else {
             setError(true)
         }
-    },[onAddTask, inputTaskValue])
+    }, [onAddTask, inputTaskValue])
 
-    const onBlurCallBackHandler = (e:FocusEvent<HTMLInputElement>) => {
+    const onBlurCallBackHandler = (e: FocusEvent<HTMLInputElement>) => {
         if (e.currentTarget) {
             setError(false)
         }
     }
 
-    let filteredTasks = tasks[todolistId]
-    if (filter === 'active') {
-        filteredTasks = tasks[todolistId].filter(t => t.status === TaskStatuses.New)
+    let filteredTasks = tasks[todolists.id]
+    if (todolists.filter === 'active') {
+        filteredTasks = tasks[todolists.id].filter(t => t.status === TaskStatuses.New)
     }
 
-    if (filter === 'done') {
-        filteredTasks = tasks[todolistId].filter(t => t.status === TaskStatuses.Completed)
+    if (todolists.filter === 'done') {
+        filteredTasks = tasks[todolists.filter].filter(t => t.status === TaskStatuses.Completed)
     }
 
 
-    return <div key={todolistId} className={s.todolist__container}>
+    return <div key={todolists.filter} className={s.todolist__container}>
         <span className={s.todolist__header}>
             <EditableSpan
-                onEditSpanKeyPress={(name) => onEditHeadingKeyPress(name, todolistId)}
-                name={title}
+                onEditSpanKeyPress={(name) => onEditHeadingKeyPress(name, todolists.id)}
+                name={todolists.title}
             />
         </span>
         <div>
             <Input
                 value={inputTaskValue}
                 onChangeCallBack={onChangeCallBackHandler}
-                onKeyDownCallBack={(e: KeyboardEvent<HTMLInputElement>) => onKeyDownCallBackHandler(todolistId, inputTaskValue, e)}
-                onBlurCallBack={(e:FocusEvent<HTMLInputElement>) => onBlurCallBackHandler(e)}
+                onKeyDownCallBack={(e: KeyboardEvent<HTMLInputElement>) => onKeyDownCallBackHandler(todolists.id, inputTaskValue, e)}
+                onBlurCallBack={(e: FocusEvent<HTMLInputElement>) => onBlurCallBackHandler(e)}
                 error={error}
             />
             <Mbutton
@@ -117,7 +112,7 @@ export const Todolist: React.FC<TodolistType> = memo(({
 
                     return <li key={t.id}>
                         <Task
-                            todolistId={todolistId}
+                            todolistId={todolists.id}
                             taskId={t.id}
                             taskName={t.title}
                             onCheckbox={onCheckbox}
@@ -130,17 +125,17 @@ export const Todolist: React.FC<TodolistType> = memo(({
             </ul>
         </div>
         <div>
-            <Mbutton callBack={useCallback(() => onFilter(todolistId, 'all'),[onFilter])}
+            <Mbutton callBack={useCallback(() => onFilter(todolists.id, 'all'), [onFilter])}
                      name={'all'}
-                     variant={filter === "all" ? "contained" : "outlined"}
+                     variant={todolists.filter === "all" ? "contained" : "outlined"}
             />
-            <Mbutton callBack={useCallback(() => onFilter(todolistId, 'active'),[onFilter])}
+            <Mbutton callBack={useCallback(() => onFilter(todolists.id, 'active'), [onFilter])}
                      name={'active'}
-                     variant={filter === "active" ? "contained" : "outlined"}
+                     variant={todolists.filter === "active" ? "contained" : "outlined"}
             />
-            <Mbutton callBack={useCallback(() => onFilter(todolistId, 'done'),[onFilter])}
+            <Mbutton callBack={useCallback(() => onFilter(todolists.id, 'done'), [onFilter])}
                      name={'done'}
-                     variant={filter === "done" ? "contained" : "outlined"}
+                     variant={todolists.filter === "done" ? "contained" : "outlined"}
             />
         </div>
     </div>
