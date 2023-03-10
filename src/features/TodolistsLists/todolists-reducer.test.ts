@@ -1,5 +1,11 @@
-import {ExtendedGetTodolistsType, onSetTodolistsAC, todolistsReducer} from './todolists-reducer'
+import {
+    changeTodolistsEntityStatusAC,
+    ExtendedGetTodolistsType,
+    onSetTodolistsAC,
+    todolistsReducer
+} from './todolists-reducer'
 import {v1} from 'uuid'
+import {RequestStatusType} from "../../app/app-reducer";
 // import {TodolistsType} from '../App'
 
 let todolistId1:string
@@ -108,5 +114,16 @@ test('TodolistsLists should be set to the state', () => {
 
     expect(result[0].title).toBe('What')
     expect(result.length).toBe(3)
+})
 
+test('correct entity status of todolist should be changed', () => {
+
+    let newStatus:RequestStatusType = 'loading'
+
+    expect(items[1].entityStatus).toBe('idle')
+
+    const action = changeTodolistsEntityStatusAC(todolistId2, newStatus)
+    const result = todolistsReducer(items, action)
+
+    expect(result[1].entityStatus).toBe('loading')
 })

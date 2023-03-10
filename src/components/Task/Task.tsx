@@ -3,6 +3,7 @@ import Checkbox from "@mui/material/Checkbox";
 import s from "../../features/TodolistsLists/Todolist/Todolist.module.css";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
 import {Mbutton} from "../Button/Button";
+import {RequestStatusType} from "../../app/app-reducer";
 
 type TaskType = {
     todolistId: string
@@ -12,6 +13,7 @@ type TaskType = {
     onEditTaskSpanKeyPress: (todolistId: string, taskId: string, name: string) => void
     onRemove: (todolistId: string, taskId: string) => void
     checked:boolean
+    entityStatus:RequestStatusType
 
 }
 export const Task:React.FC<TaskType> = memo(({
@@ -22,6 +24,7 @@ export const Task:React.FC<TaskType> = memo(({
                                                  checked,
                                                  onEditTaskSpanKeyPress,
                                                  onRemove,
+                                                 entityStatus
                                              }) => {
     return <>
         <Checkbox
@@ -37,6 +40,7 @@ export const Task:React.FC<TaskType> = memo(({
             callBack={() => onRemove(todolistId, taskId)}
             name={'x'}
             variant={"contained"}
+            entityStatus={entityStatus}
         />;
     </>
 })

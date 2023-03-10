@@ -1,13 +1,17 @@
 import React, {ChangeEvent, FocusEvent, KeyboardEvent, memo, useState} from 'react';
 import {Input} from "../Input/Input";
 import {Mbutton} from "../Button/Button";
+import {RequestStatusType} from "../../app/app-reducer";
+import {AppComponent} from "../../stories/App.stories";
 
 type AddNewTodoType = {
+    status:RequestStatusType
     addNewTodo:(title:string) => void
     onInputTextKeyDown: (newTitle: string) => void
 }
 export const AddNewTodo: React.FC<AddNewTodoType> = memo(
     ({
+         status,
          addNewTodo,
          onInputTextKeyDown,
      }) => {
@@ -48,6 +52,7 @@ export const AddNewTodo: React.FC<AddNewTodoType> = memo(
         return <>
             <Input
                 value={newTitle}
+                entityStatus={status}
                 onChangeCallBack={onChangeCallBackHandler}
                 onKeyDownCallBack={(e: KeyboardEvent<HTMLInputElement>) => onKeyDownCallBackHandler(newTitle, e)}
                 onBlurCallBack={(e:FocusEvent<HTMLInputElement>) => onBlurCallBackHandler(e)}
@@ -57,8 +62,10 @@ export const AddNewTodo: React.FC<AddNewTodoType> = memo(
                 callBack={()=>addNewTodoHandler(newTitle)}
                 name={'Add a new todolist'}
                 variant={"outlined"}
+                entityStatus={status}
             />
         </>
     }
 )
+
 

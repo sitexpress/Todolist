@@ -14,9 +14,11 @@ import s from "../../app/App.module.css";
 import Paper from "@mui/material/Paper";
 import {Mbutton} from "../../components/Button/Button";
 import {Todolist} from "./Todolist/Todolist";
+import {RequestStatusType} from "../../app/app-reducer";
 
 type PropsType = {
     demo?:boolean
+
 }
 export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
     const todolists = useAppSelector<ExtendedGetTodolistsType[]>(state => state.todolists)
@@ -90,6 +92,7 @@ export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
                                 callBack={() => onRemoveTodolist(td.id)}
                                 name={'remove-todo'}
                                 variant={"contained"}
+                                entityStatus={td.entityStatus}
                             />
                             <Todolist
                                 todolists={td}

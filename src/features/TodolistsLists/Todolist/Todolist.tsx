@@ -107,7 +107,9 @@ export const Todolist: React.FC<TodolistType> = memo(({
             <Mbutton
                 callBack={addTaskHandler}
                 name={'+'}
-                variant={"contained"}/>
+                variant={"contained"}
+                entityStatus={todolists.entityStatus}
+            />
             <ul>
                 {filteredTasks.map(t => {
 
@@ -124,6 +126,7 @@ export const Todolist: React.FC<TodolistType> = memo(({
                             checked={t.status === TaskStatuses.New ? false : true}
                             onEditTaskSpanKeyPress={onEditTaskSpanKeyPress}
                             onRemove={onRemove}
+                            entityStatus={todolists.entityStatus}
                         />
                     </li>
                 })}
@@ -133,14 +136,17 @@ export const Todolist: React.FC<TodolistType> = memo(({
             <Mbutton callBack={useCallback(() => onFilter(todolists.id, 'all'), [onFilter])}
                      name={'all'}
                      variant={todolists.filter === "all" ? "contained" : "outlined"}
+                     entityStatus={todolists.entityStatus}
             />
             <Mbutton callBack={useCallback(() => onFilter(todolists.id, 'active'), [onFilter])}
                      name={'active'}
                      variant={todolists.filter === "active" ? "contained" : "outlined"}
+                     entityStatus={todolists.entityStatus}
             />
             <Mbutton callBack={useCallback(() => onFilter(todolists.id, 'done'), [onFilter])}
                      name={'done'}
                      variant={todolists.filter === "done" ? "contained" : "outlined"}
+                     entityStatus={todolists.entityStatus}
             />
         </div>
     </div>

@@ -56,6 +56,7 @@ const App:React.FC<PropsType> = ({demo = false}) => {
             <Container fixed>
                 <Grid container spacing={0} style={{padding:"25px"}}>
                     <AddNewTodo
+                        status={status}
                         addNewTodo={onAddTodoHandler}
                         onInputTextKeyDown={onInputTextKeyDownNewTodo}
                     />
