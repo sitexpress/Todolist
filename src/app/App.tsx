@@ -26,12 +26,19 @@ import {CustomizedSnackbars} from "../components/ErrorSnackbar/ErrorSnackbar";
 import {RequestStatusType} from "./app-reducer";
 import {useSelector} from "react-redux";
 
-const App = () => {
+
+type PropsType = {
+    demo?:boolean
+}
+const App:React.FC<PropsType> = ({demo = false}) => {
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
     const dispatch = useAppDispatch()
 
     const onAddTodoHandler = useCallback(
         (title:string) => {
+            if(demo) {
+                return
+            }
             dispatch(addNewTodolistTC(title))
         }, [])
 
@@ -53,7 +60,7 @@ const App = () => {
                         onInputTextKeyDown={onInputTextKeyDownNewTodo}
                     />
                 </Grid>
-                <TodolistsLists/>
+                <TodolistsLists demo={demo}/>
             </Container>
         </div>
     </>

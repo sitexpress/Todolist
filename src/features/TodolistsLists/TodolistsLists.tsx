@@ -15,12 +15,17 @@ import Paper from "@mui/material/Paper";
 import {Mbutton} from "../../components/Button/Button";
 import {Todolist} from "./Todolist/Todolist";
 
-
-export const TodolistsLists = () => {
+type PropsType = {
+    demo?:boolean
+}
+export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
     const todolists = useAppSelector<ExtendedGetTodolistsType[]>(state => state.todolists)
     const dispatch = useAppDispatch()
 
     useEffect(() => {
+        if (demo) {
+            return
+        }
         dispatch(fetchTodolistsTC())
     },[])
 
@@ -95,6 +100,7 @@ export const TodolistsLists = () => {
                                 onFilter={onFilterHandler}
                                 onEditTaskSpanKeyPress={onEditTaskSpanKeyPressHandler}
                                 onEditHeadingKeyPress={onEditHeadingKeyPressHandler}
+                                demo={demo}
                             />
                         </Paper>
                     </div>

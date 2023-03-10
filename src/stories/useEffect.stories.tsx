@@ -125,4 +125,3 @@ const Template3: ComponentStory<typeof UseEffectComponent> = () => {
 };
 
 export const LocalStorageComponent = Template3.bind({})
-LocalStorageComponent.args = {}

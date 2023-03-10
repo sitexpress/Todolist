@@ -12,7 +12,7 @@ import {fetchTasksTC} from "../tasks-reducer";
 import {ExtendedGetTodolistsType, fetchTodolistsTC, FilterType} from "../todolists-reducer";
 
 type TodolistType = {
-    todolists:ExtendedGetTodolistsType
+    todolists: ExtendedGetTodolistsType
     onInputTextKeyDown: (todolistId: string, name: string) => void
     onAddTask: (todolistId: string, name: string) => void
     onCheckbox: (todolistId: string, taskId: string, e: ChangeEvent<HTMLInputElement>) => void
@@ -20,6 +20,7 @@ type TodolistType = {
     onFilter: (todolistId: string, name: FilterType) => void
     onEditTaskSpanKeyPress: (todolistId: string, taskId: string, name: string) => void
     onEditHeadingKeyPress: (title: string, todolistId: string) => void
+    demo?: boolean
 }
 
 export const Todolist: React.FC<TodolistType> = memo(({
@@ -31,6 +32,7 @@ export const Todolist: React.FC<TodolistType> = memo(({
                                                           onFilter,
                                                           onEditTaskSpanKeyPress,
                                                           onEditHeadingKeyPress,
+                                                          demo = false
                                                       }) => {
 
     const [inputTaskValue, setInputTaskValue] = useState('')
@@ -40,6 +42,9 @@ export const Todolist: React.FC<TodolistType> = memo(({
     const dispatch = useAppDispatch()
 
     useEffect(() => {
+        if (demo) {
+            return
+        }
         dispatch(fetchTasksTC(todolists.id))
     }, [todolists.id])
 
