@@ -35,8 +35,6 @@ export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
         (todolistId: string, taskId: string, e: ChangeEvent<HTMLInputElement>) => {
             const isDone = e.currentTarget.checked
             const status = isDone === true ? TaskStatuses.Completed : TaskStatuses.New
-            // const action = changeTaskStatusAC(todolistId, taskId, status)
-            // dispatch(action)
             const thunk = updateTaskTC(todolistId, taskId, {status})
             dispatch(thunk)
         },[dispatch])
@@ -56,15 +54,11 @@ export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
     },[])
 
     const onEditTaskSpanKeyPressHandler = useCallback((todolistId: string, taskId: string, title: string) => {
-        // const action = onEditTaskAC(todolistId, taskId, name)
-        // dispatch(action)
         const thunk = updateTaskTC(todolistId, taskId, {title})
         dispatch(thunk)
     },[])
 
     const onEditHeadingKeyPressHandler = useCallback((title: string, todolistId: string) => {
-        // const action = onEditHeadingAC(todolistId,title)
-        // dispatch(action)
         const thunk = changeTodolistTitleTC(todolistId,title)
         dispatch(thunk)
     },[])
@@ -74,13 +68,11 @@ export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
         dispatch(action)
     },[])
 
-
-
     const onRemoveTodolist = (todolistId:string) => {
         dispatch(removeTodolistsTC(todolistId))
-        // const action = removeTodolistAC(todolistId)
-        // dispatch(action)
     }
+
+
     return <>
         <Grid container spacing={2} style={{padding:"5px"}}>
             <div className={s.app__container}>

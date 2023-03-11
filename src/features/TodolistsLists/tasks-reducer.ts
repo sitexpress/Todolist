@@ -83,7 +83,7 @@ export const onSetTaskAC = (todolistId: string, tasks: TaskType[]) => {
 export const fetchTasksTC = (todolistId:string) => (dispatch:Dispatch<ActionTaskType | SetStatusACType>) => {
     dispatch(setStatusAC('loading'))
     todolistAPI.getTasks(todolistId)
-        .then((res) => {
+        .then(res => {
             dispatch(onSetTaskAC(todolistId, res.data.items))
             dispatch(setStatusAC('succeeded'))
         })
@@ -92,7 +92,14 @@ export const fetchTasksTC = (todolistId:string) => (dispatch:Dispatch<ActionTask
 export const removeTaskTC = (todolistId: string, taskId: string) => (dispatch:Dispatch<ActionTaskType>) => {
     todolistAPI.deleteTask(todolistId, taskId)
         .then(res => {
-            dispatch(removeTasksAC(todolistId, taskId))
+            if(res.data.resultCode === 0) {
+                dispatch(removeTasksAC(todolistId, taskId))
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+        })
+        .catch(error => {
+            handleServerNetworkError(error, dispatch)
         })
 }
 

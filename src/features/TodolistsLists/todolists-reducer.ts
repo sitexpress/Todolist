@@ -2,6 +2,7 @@ import {GetTodolistsType, todolistAPI} from "../../api/todolist-api";
 import {Dispatch} from "redux";
 import {RequestStatusType, setStatusAC, SetStatusACType} from "../../app/app-reducer";
 import {v1} from "uuid";
+import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
 export type FilterType = 'all' | 'active' | 'done'
 export type ExtendedGetTodolistsType = GetTodolistsType & {
@@ -89,8 +90,16 @@ export const removeTodolistsTC = (todolistId: string) => (dispatch: Dispatch<Act
     dispatch(changeTodolistsEntityStatusAC(todolistId,'loading'))
     todolistAPI.deleteTodolist(todolistId)
         .then((res) => {
-            dispatch(removeTodolistAC(todolistId))
-            dispatch(setStatusAC('succeeded'))
+            if (res.data.resultCode === 0) {
+                dispatch(removeTodolistAC(todolistId))
+                dispatch(setStatusAC('succeeded'))
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+
+        })
+        .catch(error => {
+            handleServerNetworkError(error, dispatch)
         })
 }
 
@@ -98,15 +107,29 @@ export const addNewTodolistTC = (title: string) => (dispatch: Dispatch<ActionTod
     dispatch(setStatusAC('loading'))
     todolistAPI.createTodolist(title)
         .then((res) => {
-            dispatch(addNewTodolistAC(v1(), title))
-            dispatch(setStatusAC('succeeded'))
+            if (res.data.resultCode === 0) {
+                dispatch(addNewTodolistAC(v1(), title))
+                dispatch(setStatusAC('succeeded'))
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+        })
+        .catch(error => {
+            handleServerNetworkError(error, dispatch)
         })
 }
 
 export const changeTodolistTitleTC = (todolistId: string, title: string) => (dispatch: Dispatch<ActionTodoType>) => {
     todolistAPI.updateTodolist(todolistId, title)
         .then((res) => {
-            dispatch(onEditHeadingAC(todolistId, title))
+            if (res.data.resultCode === 0) {
+                dispatch(onEditHeadingAC(todolistId, title))
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+        })
+        .catch(error => {
+            handleServerNetworkError(error, dispatch)
         })
 }
 

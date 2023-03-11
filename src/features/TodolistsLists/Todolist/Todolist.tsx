@@ -85,7 +85,7 @@ export const Todolist: React.FC<TodolistType> = memo(({
     }
 
     if (todolists.filter === 'done') {
-        filteredTasks = tasks[todolists.filter].filter(t => t.status === TaskStatuses.Completed)
+        filteredTasks = tasks[todolists.id].filter(t => t.status === TaskStatuses.Completed)
     }
 
 

@@ -63,7 +63,7 @@ export type GetTodolistsType = {
     title: string
 }
 
-type PostTodolistsType<D> = {
+export type PostTodolistsType<D> = {
     data: D
     fieldsErrors: string[]
     messages: string[]
