@@ -41,8 +41,6 @@ export const todolistAPI = {
         )
     },
     updateTask(todolistId: string, taskId: string, model:TaskType) {
-        console.log('update,', model)
-
         return instance.put<PostTasksType, AxiosResponse<PostTasksType>>(
             `todo-lists/${todolistId}/tasks/${taskId}`,
             model
@@ -112,7 +110,7 @@ export type ItemsType = {
     [key: string]: TaskType[]
 }
 
-type PostTasksType = {
+export type PostTasksType = {
     data: {
         item: TaskType
     }
