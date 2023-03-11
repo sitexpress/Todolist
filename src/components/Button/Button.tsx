@@ -17,6 +17,7 @@ export const Mbutton: React.FC<ButtonType> = ({
                                                   variant,
                                                   entityStatus
                                               }) => {
+    console.log('entityStatus', entityStatus)
     return name === 'x'
         ?
         <IconButton aria-label="delete" onClick={callBack} disabled={entityStatus === 'loading'}>

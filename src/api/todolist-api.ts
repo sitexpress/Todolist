@@ -15,7 +15,7 @@ export const todolistAPI = {
         return instance.get<ExtendedGetTodolistsType[]>(`todo-lists`)
     },
     createTodolist(title:string) {
-        return instance.post<PostTodolistsType<{item:ExtendedGetTodolistsType[]}>>(
+        return instance.post<PostTodolistsType<{item:ExtendedGetTodolistsType}>>(
             `todo-lists`,
             {title}
         )

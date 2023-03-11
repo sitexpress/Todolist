@@ -108,7 +108,7 @@ export const addNewTodolistTC = (title: string) => (dispatch: Dispatch<ActionTod
     todolistAPI.createTodolist(title)
         .then((res) => {
             if (res.data.resultCode === 0) {
-                dispatch(addNewTodolistAC(v1(), title))
+                dispatch(addNewTodolistAC(res.data.data.item.id, title))
                 dispatch(setStatusAC('succeeded'))
             } else {
                 handleServerAppError(res.data, dispatch)

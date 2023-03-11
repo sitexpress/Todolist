@@ -15,7 +15,6 @@ export const AddNewTodo: React.FC<AddNewTodoType> = memo(
          addNewTodo,
          onInputTextKeyDown,
      }) => {
-        console.log('AddNewTodo')
         const [newTitle, setNewTitle] = useState('')
         const [error, setError] = useState(false)
 

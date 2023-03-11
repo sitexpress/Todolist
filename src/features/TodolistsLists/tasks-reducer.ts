@@ -89,11 +89,13 @@ export const fetchTasksTC = (todolistId:string) => (dispatch:Dispatch<ActionTask
         })
 }
 
-export const removeTaskTC = (todolistId: string, taskId: string) => (dispatch:Dispatch<ActionTaskType>) => {
+export const removeTaskTC = (todolistId: string, taskId: string) => (dispatch:Dispatch<ActionTaskType | SetStatusACType>) => {
+    dispatch(setStatusAC('loading'))
     todolistAPI.deleteTask(todolistId, taskId)
         .then(res => {
             if(res.data.resultCode === 0) {
                 dispatch(removeTasksAC(todolistId, taskId))
+                dispatch(setStatusAC('succeeded'))
             } else {
                 handleServerAppError(res.data, dispatch)
             }

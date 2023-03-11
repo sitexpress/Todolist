@@ -10,7 +10,6 @@ export const EditableSpan: React.FC<EditableSpanType> = memo(({
                                                                   name,
                                                                   onEditSpanKeyPress
                                                               }) => {
-    console.log('EditableSpan called')
     const [newSpanName, setNewSpanName] = useState('')
     const [editSpan, setEditSpan] = useState(false)
     const [error, setError] = useState(false)
