@@ -71,8 +71,6 @@ export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
     const onRemoveTodolist = (todolistId:string) => {
         dispatch(removeTodolistsTC(todolistId))
     }
-
-
     return <>
         <Grid container spacing={2} style={{padding:"5px"}}>
             <div className={s.app__container}>
