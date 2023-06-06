@@ -5,14 +5,15 @@ import LinearProgress from '@mui/material/LinearProgress';
 import s from './App.module.css'
 import Container from '@mui/material/Container';
 import {AppRootStateType, useAppDispatch, useAppSelector} from "./store";
-import {TodolistsLists} from "features/TodolistsLists/TodolistsLists";
+import {TodolistsLists} from "features/todolistsLists/TodolistsLists";
 import {CustomizedSnackbars} from "components/ErrorSnackbar/ErrorSnackbar";
 import {initializeAppTC, RequestStatusType} from "./app-reducer";
 import {useSelector} from "react-redux";
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import {Login} from "features/Login/Login";
+import {Login} from "features/auth/Login";
 import CircularProgress from '@mui/material/CircularProgress';
-import {logoutTC} from "features/Login/auth-reducer";
+import {logoutTC} from "features/auth/auth-reducer";
+import {selectIsLoggedIn} from "features/auth/auth-selector";
 
 
 type PropsType = {
@@ -21,7 +22,7 @@ type PropsType = {
 const App: React.FC<PropsType> = ({demo = false}) => {
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
     const initialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
-    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
+    const isLoggedIn = useAppSelector(selectIsLoggedIn)
     const dispatch = useAppDispatch()
 
     useEffect(() => {

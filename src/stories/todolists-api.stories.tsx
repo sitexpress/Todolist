@@ -7,7 +7,7 @@ export default {
 }
 
 
-// TodolistsLists ------------------------------------------------------
+// todolistsLists ------------------------------------------------------
 
 // 1. GetTodolists with useEffect ------------------------------------------------
 // export const GetTodolists = () => {

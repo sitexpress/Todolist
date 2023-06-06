@@ -1,6 +1,6 @@
 import {setErrorAC, SetErrorACType, setStatusAC, SetStatusACType} from "../app/app-reducer";
 import {PostTasksType, PostTodolistsType, TaskType} from "../api/todolist-api";
-import {ActionTaskType} from "../features/TodolistsLists/tasks-reducer";
+import {ActionTaskType} from "../features/todolistsLists/tasks-reducer";
 import { Dispatch } from "redux";
 
 export const handleServerAppError = <D>(data: PostTasksType | PostTodolistsType<D>, dispatch: Dispatch<ActionTaskType | SetErrorACType | SetStatusACType>) => {

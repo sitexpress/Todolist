@@ -1,8 +1,8 @@
 import {Provider} from "react-redux"
 import {AppRootStateType, store} from "../../app/store"
 import {applyMiddleware, combineReducers} from "redux";
-import {tasksReducer} from "../../features/TodolistsLists/tasks-reducer";
-import {todolistsReducer} from "../../features/TodolistsLists/todolists-reducer";
+import {tasksReducer} from "../../features/todolistsLists/tasks-reducer";
+import {todolistsReducer} from "../../features/todolistsLists/todolists-reducer";
 import { legacy_createStore as createStore} from 'redux'
 import {v1} from "uuid";
 import thunk from "redux-thunk";
