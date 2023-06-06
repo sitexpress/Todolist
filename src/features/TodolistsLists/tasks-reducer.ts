@@ -12,11 +12,9 @@ import {setErrorAC, SetErrorACType, setStatusAC, SetStatusACType} from "../../ap
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-const initialState:ItemsType = {}
-
 const slice = createSlice({
     name:'tasks',
-    initialState:initialState,
+    initialState: {} as ItemsType,
     reducers: {
         removeTasksAC(state, action:PayloadAction<{ todolistId: string, taskId: string }>){
             const tasks = state[action.payload.todolistId]

@@ -9,12 +9,10 @@ export type ExtendedGetTodolistsType = GetTodolistsType & {
     filter: FilterType
     entityStatus: RequestStatusType
 }
-const initialState: ExtendedGetTodolistsType[] = []
-
 
 const slice = createSlice({
     name: "todolists",
-    initialState:initialState,
+    initialState:[] as ExtendedGetTodolistsType[],
     reducers: {
         removeTodolistAC(state, action:PayloadAction<{ todolistId: string }>) {
             const index = state.findIndex(tl => tl.id === action.payload.todolistId)

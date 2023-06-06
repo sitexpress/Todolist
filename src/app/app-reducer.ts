@@ -6,23 +6,13 @@ import {authActions} from "features/Login/auth-reducer";
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
-export type InitialStateType = {
-    status: RequestStatusType
-    error: string | null
-    // true когда приложение проинициализировалось (проверили пользователя auth)
-    isInitialized: boolean
-}
-
-const initialState: InitialStateType = {
-    status: 'idle',
-    error: null,
-    isInitialized: false
-}
-
-
 const slice = createSlice({
     name: 'app',
-    initialState: initialState,
+    initialState: {
+        status: 'idle' as RequestStatusType,
+        error: null as string | null,
+        isInitialized: false as boolean
+    },
     reducers: {
         setStatusAC(state, action: PayloadAction<{ status: RequestStatusType }>) {
             state.status = action.payload.status
