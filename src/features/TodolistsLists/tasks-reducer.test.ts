@@ -156,7 +156,7 @@ beforeEach(() => {
 test('correct task should be removed', () => {
     const taskId = state[todolistId1][0].id
 
-    const action = removeTasksAC(todolistId1, taskId)
+    const action = removeTasksAC({todolistId:todolistId1, taskId:taskId})
     const result = tasksReducer(state, action)
 
     expect(result[todolistId1].length).toBe(2)
@@ -168,7 +168,7 @@ test('correct task should be added correctly', () => {
     expect(state2[todolistId1][0].title).toBe('Sleep')
     expect(state2[todolistId1].length).toBe(2)
 
-    const action = addTasksAC(state[todolistId1][0])
+    const action = addTasksAC({task: state[todolistId1][0]})
     const result = tasksReducer(state2, action)
 
     expect(result[todolistId1][0].title).toBe('Eat')
@@ -181,7 +181,7 @@ test('certain task status should be changed correctly', () => {
     const taskId = state[todolistId1][0].id
     const status = TaskStatuses.Completed
 
-    const action = updateTaskAC(todolistId, taskId, {status})
+    const action = updateTaskAC({todolistId:todolistId, taskId:taskId, model:{status}})
     const result = tasksReducer(state, action)
 
     expect(result[todolistId][0].status).toBe(2)
@@ -192,7 +192,7 @@ test('remove tasks in removed todolist', () => {
     // delete startState[todolistId]
     expect(state[todolistId][0].title).toBe('Eat')
 
-    const action = removeTodolistAC(todolistId)
+    const action = removeTodolistAC({todolistId:todolistId})
     const result = tasksReducer(state, action)
 
     expect(result[todolistId]).toBe(undefined)
@@ -213,7 +213,7 @@ test('should set task correctly', () => {
         const size = Object.keys(emptyState).length
         expect(size).toEqual(0)
 
-        const action = onSetTaskAC(todolistId1, state[todolistId1])
+        const action = onSetTaskAC({todolistId:todolistId1, tasks:state[todolistId1]})
         const result = tasksReducer(emptyState, action)
 
         const resultSize = Object.keys(result).length

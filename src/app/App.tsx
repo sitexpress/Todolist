@@ -1,71 +1,58 @@
-import React, {ChangeEvent, useCallback, useEffect} from 'react';
-import {v1} from "uuid";
-import {ButtonAppBar} from "../components/AppBar/AppBar";
-import {AddNewTodo} from "../components/AddNewTodo/AddNewTodo";
+import React, {useCallback, useEffect} from 'react';
+import {ButtonAppBar} from "components/AppBar/AppBar";
 import LinearProgress from '@mui/material/LinearProgress';
 
 import s from './App.module.css'
 import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import {Mbutton} from "../components/Button/Button";
-import {
-    addNewTodolistAC, addNewTodolistTC,
-    changeTodolistTitleTC,
-    ExtendedGetTodolistsType,
-    fetchTodolistsTC,
-    FilterType,
-    onFilterAC,
-    removeTodolistsTC,
-} from "../features/TodolistsLists/todolists-reducer";
-import {addTasksTC, removeTaskTC, updateTaskTC,} from "../features/TodolistsLists/tasks-reducer";
 import {AppRootStateType, useAppDispatch, useAppSelector} from "./store";
-import {TaskStatuses} from '../api/todolist-api';
-import {TodolistsLists} from "../features/TodolistsLists/TodolistsLists";
-import {CustomizedSnackbars} from "../components/ErrorSnackbar/ErrorSnackbar";
-import {RequestStatusType} from "./app-reducer";
+import {TodolistsLists} from "features/TodolistsLists/TodolistsLists";
+import {CustomizedSnackbars} from "components/ErrorSnackbar/ErrorSnackbar";
+import {initializeAppTC, RequestStatusType} from "./app-reducer";
 import {useSelector} from "react-redux";
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {Login} from "features/Login/Login";
+import CircularProgress from '@mui/material/CircularProgress';
+import {logoutTC} from "features/Login/auth-reducer";
 
 
 type PropsType = {
-    demo?:boolean
+    demo?: boolean
 }
-const App:React.FC<PropsType> = ({demo = false}) => {
+const App: React.FC<PropsType> = ({demo = false}) => {
     const status = useSelector<AppRootStateType, RequestStatusType>(state => state.app.status)
+    const initialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
+    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
     const dispatch = useAppDispatch()
 
-    const onAddTodoHandler = useCallback(
-        (title:string) => {
-            if(demo) {
-                return
-            }
-            dispatch(addNewTodolistTC(title))
-        }, [])
-
-    const onInputTextKeyDownNewTodo = useCallback((newTitle: string) => {
-        onAddTodoHandler(newTitle)
+    useEffect(() => {
+        dispatch(initializeAppTC())
     }, [])
 
+    const logoutHandler = useCallback(() => {
+        dispatch(logoutTC())
+    }, [])
+
+    if (!initialized) {
+        return <CircularProgress className={s.circular__progress}/>
+    }
+
     return <>
-        <ButtonAppBar/>
-        <div className={s.app__linearprogress_wrapper}>
-            {status === 'loading' && <LinearProgress className={s.app__linearprogress}/>}
-        </div>
-        <CustomizedSnackbars />
-        <div className={s.app__wrapper}>
-            <Container fixed>
-                <Grid container spacing={0} style={{padding:"25px"}}>
-                    <AddNewTodo
-                        status={status}
-                        addNewTodo={onAddTodoHandler}
-                        onInputTextKeyDown={onInputTextKeyDownNewTodo}
-                    />
-                </Grid>
-                <TodolistsLists demo={demo}/>
-            </Container>
-        </div>
+        <BrowserRouter>
+            <ButtonAppBar isLoggedIn={isLoggedIn} logoutHandler={logoutHandler}/>
+            <div className={s.app__linearprogress_wrapper}>
+                {status === 'loading' && <LinearProgress className={s.app__linearprogress}/>}
+            </div>
+            <CustomizedSnackbars/>
+            <div className={s.app__wrapper}>
+                <Container fixed>
+                    <Routes>
+                        <Route path={"/"} element={<TodolistsLists demo={demo}/>}/>
+                        <Route path={"/login"} element={<Login/>}/>
+                    </Routes>
+                </Container>
+            </div>
+        </BrowserRouter>
     </>
 }
-
 
 export default App;

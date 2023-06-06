@@ -1,5 +1,6 @@
-import {useAppDispatch, useAppSelector} from "../../app/store";
+import {AppRootStateType, useAppDispatch, useAppSelector} from "../../app/store";
 import {
+    addNewTodolistTC,
     changeTodolistTitleTC,
     ExtendedGetTodolistsType,
     fetchTodolistsTC,
@@ -15,6 +16,8 @@ import Paper from "@mui/material/Paper";
 import {Mbutton} from "../../components/Button/Button";
 import {Todolist} from "./Todolist/Todolist";
 import {RequestStatusType} from "../../app/app-reducer";
+import {AddNewTodo} from "../../components/AddNewTodo/AddNewTodo";
+import { Navigate } from "react-router-dom";
 
 type PropsType = {
     demo?:boolean
@@ -22,10 +25,13 @@ type PropsType = {
 }
 export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
     const todolists = useAppSelector<ExtendedGetTodolistsType[]>(state => state.todolists)
+    const status = useAppSelector<RequestStatusType>(state => state.app.status)
+    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
+
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        if (demo) {
+        if (demo || !isLoggedIn) {
             return
         }
         dispatch(fetchTodolistsTC())
@@ -64,14 +70,39 @@ export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
     },[])
 
     const onFilterHandler = useCallback((todolistId: string, filter: FilterType) => {
-        const action = onFilterAC(todolistId, filter)
+        const action = onFilterAC({todolistId:todolistId, filter:filter})
         dispatch(action)
     },[])
 
     const onRemoveTodolist = (todolistId:string) => {
         dispatch(removeTodolistsTC(todolistId))
     }
+
+
+    const onAddTodoHandler = useCallback(
+        (title:string) => {
+            if(demo) {
+                return
+            }
+            dispatch(addNewTodolistTC(title))
+        }, [])
+
+    const onInputTextKeyDownNewTodo = useCallback((newTitle: string) => {
+        onAddTodoHandler(newTitle)
+    }, [])
+
+    if (!isLoggedIn) {
+        return <Navigate to={"/login"}/>
+    }
+
     return <>
+        <Grid container spacing={0} style={{padding:"30px 30px 30px 0px", margin:" 0px 0px 0px -5px"}}>
+            <AddNewTodo
+                status={status}
+                addNewTodo={onAddTodoHandler}
+                onInputTextKeyDown={onInputTextKeyDownNewTodo}
+            />
+        </Grid>
         <Grid container spacing={2} style={{padding:"5px"}}>
             <div className={s.app__container}>
 

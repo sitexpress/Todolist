@@ -23,7 +23,7 @@ export const CustomizedSnackbars = () => {
         if (reason === 'clickaway') {
             return
         }
-        dispatch(setErrorAC(null))
+        dispatch(setErrorAC({error:null}))
     }
 
     const isOpen = error !== null

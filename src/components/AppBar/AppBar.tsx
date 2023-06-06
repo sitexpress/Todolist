@@ -7,7 +7,15 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import React from "react";
 
-export const ButtonAppBar = () => {
+
+type ButtonAppBarType = {
+    isLoggedIn: boolean
+    logoutHandler: () => void
+}
+export const ButtonAppBar:React.FC<ButtonAppBarType> = ({
+                                                            isLoggedIn,
+                                                            logoutHandler
+}) => {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
@@ -24,7 +32,7 @@ export const ButtonAppBar = () => {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         Todolist
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    {isLoggedIn && <Button onClick={logoutHandler} color="inherit">Log out</Button>}
                 </Toolbar>
             </AppBar>
         </Box>

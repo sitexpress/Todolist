@@ -53,9 +53,37 @@ export const todolistAPI = {
     },
 }
 
-// types
-// TodolistsTypes
 
+export const authAPI = {
+    login(data:LoginParamsType) {
+        const promise = instance.post<PostTodolistsType<{userId?:number}>>(
+            `/auth/login`,
+            data
+        )
+        return promise
+    },
+    logout(){
+        const promise = instance.delete<PostTodolistsType<{}>>(`/auth/login`)
+        return promise
+    },
+    me() {
+        const promise = instance.get<PostTodolistsType<{id: number, email: string, login: string}>>(`/auth/me`)
+        return promise
+    }
+}
+
+
+
+// types
+// LoginParamsType
+export type LoginParamsType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha?: string
+}
+
+// TodolistsTypes
 export type GetTodolistsType = {
     addedDate: string
     id: string

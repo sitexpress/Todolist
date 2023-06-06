@@ -109,7 +109,7 @@ test('TodolistsLists should be set to the state', () => {
     expect(items[0].title).toBe('What to learn')
     expect(items.length).toBe(2)
 
-    const action = onSetTodolistsAC(newItems)
+    const action = onSetTodolistsAC({todolists:newItems})
     const result = todolistsReducer(items, action)
 
     expect(result[0].title).toBe('What')
@@ -122,7 +122,7 @@ test('correct entity status of todolist should be changed', () => {
 
     expect(items[1].entityStatus).toBe('idle')
 
-    const action = changeTodolistsEntityStatusAC(todolistId2, newStatus)
+    const action = changeTodolistsEntityStatusAC({id:todolistId2, status:newStatus})
     const result = todolistsReducer(items, action)
 
     expect(result[1].entityStatus).toBe('loading')
