@@ -8,8 +8,8 @@ import {Task} from "../../../components/Task/Task";
 import {useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch} from "../../../app/store";
 import {ItemsType, TaskStatuses, TaskType} from "../../../api/todolist-api";
-import {fetchTasksTC} from "../tasks-reducer";
 import {ExtendedGetTodolistsType, fetchTodolistsTC, FilterType} from "../todolists-reducer";
+import {tasksThunks} from "../tasks-reducer";
 
 type TodolistType = {
     todolists: ExtendedGetTodolistsType
@@ -45,7 +45,7 @@ export const Todolist: React.FC<TodolistType> = memo(({
         if (demo) {
             return
         }
-        dispatch(fetchTasksTC(todolists.id))
+        dispatch(tasksThunks.fetchTasks(todolists.id))
     }, [todolists.id])
 
     const onKeyDownCallBackHandler = (todolistId: string, inputTaskValue: string, e: KeyboardEvent<HTMLInputElement>) => {

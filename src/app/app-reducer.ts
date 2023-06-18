@@ -28,6 +28,7 @@ const slice = createSlice({
 })
 
 export const appReducer = slice.reducer
+export const appActions = slice.actions
 export const {setStatusAC, setAppIsInitializedAC, setErrorAC} = slice.actions
 
 

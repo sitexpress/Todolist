@@ -34,10 +34,10 @@ export const todolistAPI = {
     getTasks(todolistId: string) {
         return instance.get<GetTasksType>(`todo-lists/${todolistId}/tasks`)
     },
-    createTask(todolistId: string, title: string) {
+    createTask(arg:AddTaskArgType) {
         return instance.post<PostTasksType>(
-            `todo-lists/${todolistId}/tasks`,
-            {title}
+            `todo-lists/${arg.todolistId}/tasks`,
+            {title:arg.title}
         )
     },
     updateTask(todolistId: string, taskId: string, model:TaskType) {
@@ -145,4 +145,9 @@ export type PostTasksType = {
     fieldsError: []
     messages: string[]
     resultCode: number
+}
+
+export type AddTaskArgType = {
+    todolistId: string
+    title: string
 }

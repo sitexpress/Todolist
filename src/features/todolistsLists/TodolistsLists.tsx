@@ -9,7 +9,7 @@ import {
 } from "./todolists-reducer";
 import React, {ChangeEvent, useCallback, useEffect} from "react";
 import {TaskStatuses} from "../../api/todolist-api";
-import {addTasksTC, removeTaskTC, updateTaskTC} from "./tasks-reducer";
+import {addTask, removeTaskTC, updateTaskTC} from "./tasks-reducer";
 import Grid from "@mui/material/Grid";
 import s from "../../app/App.module.css";
 import Paper from "@mui/material/Paper";
@@ -54,8 +54,8 @@ export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
         dispatch(thunk)
     },[])
 
-    const onAddTaskHandler = useCallback((todolistId: string, name: string) => {
-        const thunk = addTasksTC(todolistId, name)
+    const onAddTaskHandler = useCallback((todolistId: string, title: string) => {
+        const thunk = addTask({todolistId, title})
         dispatch(thunk)
     },[])
 
