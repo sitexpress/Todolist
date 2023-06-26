@@ -8,16 +8,16 @@ import {
     onFilterAC, removeTodolistsTC
 } from "./todolists-reducer";
 import React, {ChangeEvent, useCallback, useEffect} from "react";
-import {TaskStatuses} from "../../api/todolist-api";
-import {addTask, removeTaskTC, updateTaskTC} from "./tasks-reducer";
+import {removeTaskTC, tasksThunks} from "./tasks-reducer";
 import Grid from "@mui/material/Grid";
 import s from "../../app/App.module.css";
 import Paper from "@mui/material/Paper";
-import {Mbutton} from "../../components/Button/Button";
+import {Mbutton} from "../../common/components/Button/Button";
 import {Todolist} from "./Todolist/Todolist";
 import {RequestStatusType} from "../../app/app-reducer";
-import {AddNewTodo} from "../../components/AddNewTodo/AddNewTodo";
+import {AddNewTodo} from "../../common/components/AddNewTodo/AddNewTodo";
 import { Navigate } from "react-router-dom";
+import {TaskStatuses} from "../../common/enums/common-enums";
 
 type PropsType = {
     demo?:boolean
@@ -41,7 +41,7 @@ export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
         (todolistId: string, taskId: string, e: ChangeEvent<HTMLInputElement>) => {
             const isDone = e.currentTarget.checked
             const status = isDone === true ? TaskStatuses.Completed : TaskStatuses.New
-            const thunk = updateTaskTC(todolistId, taskId, {status})
+            const thunk = tasksThunks.updateTask({todolistId, taskId, domainModel: {status}})
             dispatch(thunk)
         },[dispatch])
 
@@ -55,13 +55,12 @@ export const TodolistsLists:React.FC<PropsType> = ({demo= false}) => {
     },[])
 
     const onAddTaskHandler = useCallback((todolistId: string, title: string) => {
-        const thunk = addTask({todolistId, title})
+        const thunk = tasksThunks.addTask({todolistId, title})
         dispatch(thunk)
     },[])
 
     const onEditTaskSpanKeyPressHandler = useCallback((todolistId: string, taskId: string, title: string) => {
-        const thunk = updateTaskTC(todolistId, taskId, {title})
-        dispatch(thunk)
+        dispatch(tasksThunks.updateTask({todolistId, taskId, domainModel: {title}}))
     },[])
 
     const onEditHeadingKeyPressHandler = useCallback((title: string, todolistId: string) => {

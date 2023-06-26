@@ -1,8 +1,8 @@
 import React, {ChangeEvent, FocusEvent, KeyboardEvent, memo, useState} from 'react';
 import {Input} from "../Input/Input";
 import {Mbutton} from "../Button/Button";
-import {RequestStatusType} from "../../app/app-reducer";
-import {AppComponent} from "../../stories/App.stories";
+import {RequestStatusType} from "../../../app/app-reducer";
+import {AppComponent} from "../../../stories/App.stories";
 
 type AddNewTodoType = {
     status:RequestStatusType

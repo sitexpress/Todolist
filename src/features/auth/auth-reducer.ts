@@ -1,13 +1,10 @@
-import {
-    authAPI,
-    LoginParamsType,
-
-} from "../../api/todolist-api";
-import {Dispatch} from "redux";
 import {setStatusAC} from "../../app/app-reducer";
-import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
+import {handleServerNetworkError} from "../../common/utils/handle-server-network-error";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {AppThunk} from "app/store";
+import {handleServerAppError} from "../../common/utils/handle-server-app-error";
+import {LoginParamsType} from "../../common/types/common-types";
+import {authAPI} from "./auth-api";
 
 
 export type AuthInitialStateType = typeof initialState

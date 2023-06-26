@@ -1,8 +1,8 @@
-import {GetTodolistsType, todolistAPI} from "../../api/todolist-api";
 import {Dispatch} from "redux";
 import {RequestStatusType, setStatusAC} from "../../app/app-reducer";
-import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {handleServerAppError} from "../../common/utils/handle-server-app-error";
+import {GetTodolistsType, todolistAPI} from "./todolists-api";
 
 export type FilterType = 'all' | 'active' | 'done'
 export type ExtendedGetTodolistsType = GetTodolistsType & {
@@ -78,7 +78,7 @@ export const fetchTodolistsTC = () => (dispatch: Dispatch) => {
             dispatch(setStatusAC({status:'succeeded'}))
         })
         .catch(error => {
-            handleServerNetworkError(error, dispatch)
+            handleServerAppError(error, dispatch)
         })
 }
 
@@ -96,7 +96,7 @@ export const removeTodolistsTC = (todolistId: string) => (dispatch: Dispatch) =>
 
         })
         .catch(error => {
-            handleServerNetworkError(error, dispatch)
+            handleServerAppError(error, dispatch)
         })
 }
 
@@ -112,7 +112,7 @@ export const addNewTodolistTC = (title: string) => (dispatch: Dispatch) => {
             }
         })
         .catch(error => {
-            handleServerNetworkError(error, dispatch)
+            handleServerAppError(error, dispatch)
         })
 }
 
@@ -126,7 +126,7 @@ export const changeTodolistTitleTC = (todolistId: string, title: string) => (dis
             }
         })
         .catch(error => {
-            handleServerNetworkError(error, dispatch)
+            handleServerAppError(error, dispatch)
         })
 }
 

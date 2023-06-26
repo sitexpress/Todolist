@@ -1,8 +1,8 @@
 import React, {ChangeEvent, FocusEvent, KeyboardEvent, useState} from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import {EditableSpan} from "../components/EditableSpan/EditableSpan";
+import {EditableSpan} from "../common/components/EditableSpan/EditableSpan";
 import {action} from "@storybook/addon-actions";
-import s from "../components/EditableSpan/EditableSpan.module.css";
+import s from "../common/components/EditableSpan/EditableSpan.module.css";
 
 export default {
     title: "Span component/EditableSpan",

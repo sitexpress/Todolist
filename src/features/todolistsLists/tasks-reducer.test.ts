@@ -1,7 +1,8 @@
 import {ExtendedGetTodolistsType, removeTodolistAC} from './todolists-reducer'
 import {v1} from 'uuid'
-import {updateTaskAC, removeTasksAC, tasksReducer, tasksThunks} from "./tasks-reducer";
-import {ItemsType, TaskPriorities, TaskStatuses, TaskType} from "../../api/todolist-api";
+import {removeTasksAC, tasksReducer, tasksThunks} from "./tasks-reducer";
+import {TaskPriorities, TaskStatuses} from "../../common/enums/common-enums";
+import {ItemsType} from "./todolists-api";
 
 let todolistId1: string
 let todolistId2: string
@@ -168,7 +169,12 @@ test('correct task should be added correctly', () => {
     expect(state2[todolistId1][0].title).toBe('Sleep')
     expect(state2[todolistId1].length).toBe(2)
 
-    const action = tasksThunks.addTask.fulfilled({task: state[todolistId1][0]}, 'requestId', {title:'Eat',todolistId:todolistId1})
+    const action = tasksThunks.addTask.fulfilled(
+        {task: state[todolistId1][0]},
+        'requestId',
+        {title:'Eat',todolistId:todolistId1}
+    )
+
     const result = tasksReducer(state2, action)
 
     expect(result[todolistId1][0].title).toBe('Eat')
@@ -181,7 +187,13 @@ test('certain task status should be changed correctly', () => {
     const taskId = state[todolistId1][0].id
     const status = TaskStatuses.Completed
 
-    const action = updateTaskAC({todolistId: todolistId, taskId: taskId, model: {status}})
+    const args = {todolistId: todolistId, taskId: taskId, domainModel: {status}}
+
+    const action = tasksThunks.updateTask.fulfilled(
+        args,
+        'requestId',
+        args
+        )
     const result = tasksReducer(state, action)
 
     expect(result[todolistId][0].status).toBe(2)

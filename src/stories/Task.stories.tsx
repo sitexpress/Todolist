@@ -1,6 +1,6 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import {Task} from "../components/Task/Task";
+import {Task} from "../common/components/Task/Task";
 import {action} from "@storybook/addon-actions";
 
 export default {

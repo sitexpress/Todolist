@@ -1,14 +1,8 @@
-import axios, {AxiosResponse} from "axios";
-import {ExtendedGetTodolistsType} from "../features/todolistsLists/todolists-reducer";
-
-// Instance
-const instance = axios.create({
-    baseURL: `https://social-network.samuraijs.com/api/1.1/`,
-    withCredentials: true,
-    headers: {
-        'API-KEY': '63052fc1-39d2-496e-872a-b5f91fbb5674'
-    }
-})
+import {ExtendedGetTodolistsType} from "./todolists-reducer";
+import {AxiosResponse} from "axios";
+import {instance} from "../../common/api/common-api";
+import {TaskPriorities, TaskStatuses} from "../../common/enums/common-enums";
+import {UpdateTaskType} from "./tasks-reducer";
 
 export const todolistAPI = {
     getTodolists() {
@@ -53,36 +47,6 @@ export const todolistAPI = {
     },
 }
 
-
-export const authAPI = {
-    login(data:LoginParamsType) {
-        const promise = instance.post<PostTodolistsType<{userId?:number}>>(
-            `/auth/login`,
-            data
-        )
-        return promise
-    },
-    logout(){
-        const promise = instance.delete<PostTodolistsType<{}>>(`/auth/login`)
-        return promise
-    },
-    me() {
-        const promise = instance.get<PostTodolistsType<{id: number, email: string, login: string}>>(`/auth/me`)
-        return promise
-    }
-}
-
-
-
-// types
-// LoginParamsType
-export type LoginParamsType = {
-    email: string
-    password: string
-    rememberMe: boolean
-    captcha?: string
-}
-
 // TodolistsTypes
 export type GetTodolistsType = {
     addedDate: string
@@ -99,20 +63,6 @@ export type PostTodolistsType<D> = {
 }
 
 // TasksTypes
-export enum TaskStatuses {
-    New = 0,
-    InProgress = 1,
-    Completed = 2,
-    Draft = 3
-}
-
-export enum TaskPriorities {
-    Low = 0,
-    Middle = 1,
-    Hi = 2,
-    Urgently = 3,
-    Later = 4
-}
 
 export type TaskType = {
     description: string
@@ -150,4 +100,10 @@ export type PostTasksType = {
 export type AddTaskArgType = {
     todolistId: string
     title: string
+}
+
+export type UpdateTaskArgType = {
+    todolistId: string
+    domainModel: UpdateTaskType
+    taskId: string
 }

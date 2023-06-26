@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect} from 'react';
-import {ButtonAppBar} from "components/AppBar/AppBar";
+import {ButtonAppBar} from "common/components/AppBar/AppBar";
 import LinearProgress from '@mui/material/LinearProgress';
 
 import s from './App.module.css'
 import Container from '@mui/material/Container';
 import {AppRootStateType, useAppDispatch, useAppSelector} from "./store";
 import {TodolistsLists} from "features/todolistsLists/TodolistsLists";
-import {CustomizedSnackbars} from "components/ErrorSnackbar/ErrorSnackbar";
+import {CustomizedSnackbars} from "common/components/ErrorSnackbar/ErrorSnackbar";
 import {initializeAppTC, RequestStatusType} from "./app-reducer";
 import {useSelector} from "react-redux";
 import {BrowserRouter, Route, Routes} from 'react-router-dom';

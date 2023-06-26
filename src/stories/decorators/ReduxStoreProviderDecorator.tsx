@@ -7,7 +7,7 @@ import { legacy_createStore as createStore} from 'redux'
 import {v1} from "uuid";
 import thunk from "redux-thunk";
 import {appReducer} from "../../app/app-reducer";
-import {TaskPriorities, TaskStatuses} from "../../api/todolist-api";
+import {TaskPriorities, TaskStatuses} from "../../common/enums/common-enums";
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,

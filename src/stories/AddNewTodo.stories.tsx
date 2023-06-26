@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import {AddNewTodo} from "../components/AddNewTodo/AddNewTodo";
+import {AddNewTodo} from "../common/components/AddNewTodo/AddNewTodo";
 import {action} from "@storybook/addon-actions";
 import {RequestStatusType} from "../app/app-reducer";
 

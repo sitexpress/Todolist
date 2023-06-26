@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import s from './Button.module.css'
-import {RequestStatusType} from "../../app/app-reducer";
+import {RequestStatusType} from "../../../app/app-reducer";
 
 type ButtonType = {
     callBack: () => void

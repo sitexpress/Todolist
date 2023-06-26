@@ -2,7 +2,7 @@ import React, {ChangeEvent,KeyboardEvent,FocusEvent} from 'react';
 
 import s from './Input.module.css'
 import TextField from "@mui/material/TextField";
-import {RequestStatusType} from "../../app/app-reducer";
+import {RequestStatusType} from "../../../app/app-reducer";
 
 type InputType = {
     value: string

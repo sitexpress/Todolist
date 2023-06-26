@@ -1,4 +1,4 @@
-import {Mbutton} from '../components/Button/Button'
+import {Mbutton} from '../common/components/Button/Button'
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import {action} from "@storybook/addon-actions";
 import React from "react";
