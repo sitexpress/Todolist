@@ -3,7 +3,7 @@ import {
     AddNewTodolistACType,
     onSetTodolistsACType,
     onSetTodolistsAC,
-    removeTodolistAC
+    removeTodolistAC, addNewTodolistAC
 } from "./todolists-reducer";
 import {Dispatch} from "redux";
 import {setErrorAC, setStatusAC} from "../../app/app-reducer";
@@ -148,6 +148,9 @@ const slice = createSlice({
                 action.payload.todolists.forEach((tl: any) => {
                     state[tl.id] = []
                 })
+            })
+            .addCase(addNewTodolistAC, (state, action) => {
+                state[action.payload.todolistId] = []
             })
     }
 
